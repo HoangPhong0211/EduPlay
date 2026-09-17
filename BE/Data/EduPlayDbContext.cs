@@ -41,6 +41,25 @@ namespace BE.Data
             // 4. Cấu hình quan hệ N-N: Học sinh - Huy hiệu (Bảng trung gian StudentBadge)
             modelBuilder.Entity<StudentBadge>()
                 .HasKey(sb => new { sb.StudentId, sb.BadgeId }); // Khóa chính kết hợp 2 cột
+
+            modelBuilder.Entity<ErrorLog>()
+                .HasOne(e => e.Student)
+                .WithMany()
+                .HasForeignKey(e => e.StudentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ErrorLog>()
+                .HasOne(e => e.Question)
+                .WithMany()
+                .HasForeignKey(e => e.QuestionId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Cấu hình quan hệ 1-N: Topic có nhiều Lesson
+            modelBuilder.Entity<Lesson>()
+                .HasOne(l => l.Topic)
+                .WithMany(t => t.Lessons)
+                .HasForeignKey(l => l.TopicId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

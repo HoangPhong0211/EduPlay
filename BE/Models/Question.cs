@@ -9,5 +9,6 @@
         public string QuestionType { get; set; } = string.Empty; // Kéo thả, trắc nghiệm
         public string DifficultyLevel { get; set; } = string.Empty; // Độ khó: Dễ, Trung bình, Khó
         public string? Hint { get; set; } // Gợi ý khi làm sai
+        public string CorrectAnswer { get; set; } = string.Empty;
     }
 }

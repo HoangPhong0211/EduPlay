@@ -10,5 +10,7 @@
         public string? AvatarUrl { get; set; }
         public int TotalPoints { get; set; } = 0;
         public int TimeLimitMinutes { get; set; } = 60;
+
+        public ICollection<StudentBadge> StudentBadges { get; set; } = new List<StudentBadge>();
     }
 }

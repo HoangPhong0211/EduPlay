@@ -101,6 +101,10 @@ namespace BE.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("QuestionId");
+
+                    b.HasIndex("StudentId");
+
                     b.ToTable("ErrorLogs");
                 });
 
@@ -157,6 +161,10 @@ namespace BE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CorrectAnswer")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -223,6 +231,8 @@ namespace BE.Migrations
 
                     b.HasKey("StudentId", "BadgeId");
 
+                    b.HasIndex("BadgeId");
+
                     b.ToTable("StudentBadges");
                 });
 
@@ -260,6 +270,15 @@ namespace BE.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("OtpCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("OtpExpiryTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -277,6 +296,25 @@ namespace BE.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("BE.Models.ErrorLog", b =>
+                {
+                    b.HasOne("BE.Models.Question", "Question")
+                        .WithMany()
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("BE.Models.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Question");
+
+                    b.Navigation("Student");
+                });
+
             modelBuilder.Entity("BE.Models.Student", b =>
                 {
                     b.HasOne("BE.Models.Parent", null)
@@ -284,6 +322,35 @@ namespace BE.Migrations
                         .HasForeignKey("ParentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("BE.Models.StudentBadge", b =>
+                {
+                    b.HasOne("BE.Models.Badge", "Badge")
+                        .WithMany("StudentBadges")
+                        .HasForeignKey("BadgeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BE.Models.Student", "Student")
+                        .WithMany("StudentBadges")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Badge");
+
+                    b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("BE.Models.Badge", b =>
+                {
+                    b.Navigation("StudentBadges");
+                });
+
+            modelBuilder.Entity("BE.Models.Student", b =>
+                {
+                    b.Navigation("StudentBadges");
                 });
 #pragma warning restore 612, 618
         }

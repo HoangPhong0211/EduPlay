@@ -7,5 +7,5 @@
 
         public string Title { get; set; } = string.Empty;
         public int OrderIndex { get; set; } // Thứ tự bài học
-    }
+        public Topic Topic { get; set; } = null!;    }
 }

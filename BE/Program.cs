@@ -1,10 +1,35 @@
 using BE.Data; 
+using BE.Services;
 using Microsoft.EntityFrameworkCore; 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // 1. Thêm dịch vụ Controllers
 builder.Services.AddControllers();
+builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<AdminService>();
+builder.Services.AddScoped<StudentService>();
+builder.Services.AddScoped<ParentService>();
+builder.Services.AddHttpClient<QuestionService>();
+builder.Services.AddScoped<ReportService>();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
+        };
+    });
 
 // 2. Cấu hình CORS cho phép ReactJS gọi API
 builder.Services.AddCors(options =>
@@ -43,6 +68,7 @@ app.UseHttpsRedirection();
 // Kích hoạt CORS đã cài đặt ở trên (Lưu ý: Đặt trước UseAuthorization)
 app.UseCors("AllowReactFE"); 
 
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
