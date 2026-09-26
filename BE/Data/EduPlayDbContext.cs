@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+
+using Microsoft.EntityFrameworkCore;
 using BE.Models; // Thay BE bằng namespace thực tế của bạn nếu khác
 
 namespace BE.Data
@@ -26,10 +27,26 @@ namespace BE.Data
             // 1. Cấu hình quan hệ 1-1: Bảng USERS mở rộng thành PARENTS
             modelBuilder.Entity<Parent>()
                 .HasKey(p => p.UserId); // Set UserId làm Khóa chính (PK)
+            modelBuilder.Entity<Parent>()
+                .Property(p => p.UserId)
+                .ValueGeneratedNever(); // Khóa chính lấy từ User.Id, không sinh tự động (IDENTITY)
+            modelBuilder.Entity<Parent>()
+                .HasOne<User>()
+                .WithOne()
+                .HasForeignKey<Parent>(p => p.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
             
             // 2. Cấu hình quan hệ 1-1: Bảng USERS mở rộng thành STUDENTS
             modelBuilder.Entity<Student>()
                 .HasKey(s => s.UserId); // Set UserId làm Khóa chính (PK)
+            modelBuilder.Entity<Student>()
+                .Property(s => s.UserId)
+                .ValueGeneratedNever(); // Khóa chính lấy từ User.Id, không sinh tự động (IDENTITY)
+            modelBuilder.Entity<Student>()
+                .HasOne<User>()
+                .WithOne()
+                .HasForeignKey<Student>(s => s.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             // 3. Cấu hình quan hệ 1-N: Phụ huynh quản lý nhiều Học sinh
             modelBuilder.Entity<Student>()

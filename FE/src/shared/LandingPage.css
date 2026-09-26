@@ -1,0 +1,410 @@
+/* Container */
+.landing-container {
+  position: relative;
+  min-height: 100vh;
+  background-color: #f8fafc;
+}
+
+/* Phần Header */
+.header { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  padding: 16px 36px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-left { 
+  display: flex; 
+  align-items: center; 
+  gap: 16px; 
+}
+
+.menu-btn { 
+  background: #f1f5f9; 
+  border: 1px solid #e2e8f0; 
+  padding: 8px 14px; 
+  cursor: pointer; 
+  border-radius: 8px; 
+  font-size: 18px;
+  color: #334155;
+  transition: all 0.2s;
+}
+
+.menu-btn:hover {
+  background: #e2e8f0;
+}
+
+.logo { 
+  font-size: 26px; 
+  font-weight: 800; 
+  color: #00838f;
+  text-decoration: none;
+  letter-spacing: -0.5px;
+}
+
+/* Thanh tìm kiếm */
+.search-bar { 
+  display: flex; 
+  align-items: center; 
+  background: #f1f5f9; 
+  border-radius: 24px; 
+  padding: 6px 18px; 
+  width: 320px;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+}
+
+.search-bar:focus-within {
+  background: #ffffff;
+  border-color: #00bcd4;
+  box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.15);
+}
+
+.search-bar input { 
+  background: transparent; 
+  border: none; 
+  outline: none; 
+  width: 100%; 
+  padding: 6px;
+  font-size: 14px;
+}
+
+.search-bar button { 
+  background: none; 
+  border: none; 
+  cursor: pointer; 
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+/* Nút Đăng nhập / Đăng ký */
+.auth-buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.auth-buttons a { 
+  padding: 8px 20px; 
+  text-decoration: none; 
+  border-radius: 8px; 
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.btn-login {
+  color: #00838f;
+  border: 1.5px solid #00acc1;
+  background-color: transparent;
+}
+
+.btn-login:hover {
+  background-color: #e0f7fa;
+}
+
+.btn-register { 
+  background-color: #00bcd4; 
+  border: 1.5px solid #00bcd4; 
+  color: #ffffff !important;
+}
+
+.btn-register:hover {
+  background-color: #0097a7;
+  border-color: #0097a7;
+}
+
+/* Thông tin người dùng khi đã đăng nhập */
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-greeting {
+  font-size: 14px;
+  color: #334155;
+}
+
+.user-role-badge {
+  background-color: #e0f2fe;
+  color: #0284c7;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 12px;
+  text-transform: uppercase;
+}
+
+.btn-logout {
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fca5a5;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-logout:hover {
+  background: #fecaca;
+}
+
+/* Sidebar Menu chọn khối lớp */
+.sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 150;
+}
+
+.sidebar { 
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  bottom: 0;
+  width: 260px; 
+  background: #ffffff; 
+  box-shadow: 4px 0 20px rgba(0,0,0,0.15); 
+  padding: 24px; 
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.sidebar-header h3 { 
+  font-size: 16px;
+  color: #1e293b;
+  font-weight: 700;
+}
+
+.sidebar-close {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #64748b;
+  padding: 4px;
+}
+
+.sidebar ul { 
+  list-style: none; 
+}
+
+.sidebar li { 
+  padding: 12px 16px; 
+  background: #f8fafc; 
+  margin-bottom: 10px; 
+  border-radius: 8px;
+  cursor: pointer; 
+  font-weight: 600;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s;
+}
+
+.sidebar li:hover {
+  background: #e0f7fa;
+  color: #00838f;
+  border-color: #4dd0e1;
+}
+
+.sidebar li.active {
+  background: #00bcd4;
+  color: #ffffff;
+  border-color: #00bcd4;
+}
+
+/* Thanh Menu ngang */
+.main-nav {
+  background: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.main-nav ul { 
+  display: flex; 
+  justify-content: center; 
+  list-style: none; 
+  padding: 12px 0; 
+  margin: 0 36px;
+  gap: 28px;
+}
+
+.main-nav li { 
+  cursor: pointer; 
+  font-size: 14px;
+  font-weight: 600;
+  color: #475569;
+  transition: color 0.2s;
+}
+
+.main-nav li:hover {
+  color: #00bcd4;
+}
+
+/* Slogan & Banner */
+.slogan-banner { 
+  text-align: center; 
+  background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%); 
+  padding: 32px 20px; 
+  margin: 24px 36px; 
+  border-radius: 16px; 
+  border: 1px solid #80deea;
+}
+
+.slogan-banner h2 {
+  font-size: 24px;
+  color: #006064;
+  margin-bottom: 8px;
+  font-weight: 800;
+}
+
+.slogan-banner p {
+  font-size: 15px;
+  color: #00838f;
+}
+
+.filter-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  background: #ffffff;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.filter-tag button {
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+/* Khu vực danh sách khóa học */
+.course-section {
+  padding: 10px 36px 50px 36px;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 20px;
+}
+
+.course-grid { 
+  display: grid; 
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+  gap: 24px; 
+}
+
+.course-card { 
+  background: #ffffff; 
+  padding: 24px; 
+  border-radius: 14px; 
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.course-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.course-grade-badge {
+  align-self: flex-start;
+  background-color: #f0fdf4;
+  color: #16a34a;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+.course-card h4 {
+  font-size: 16px;
+  color: #0f172a;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.course-card p {
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.5;
+  margin-bottom: 20px;
+  flex-grow: 1;
+}
+
+.btn-start-learn {
+  background-color: #00bcd4;
+  color: #ffffff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-start-learn:hover {
+  background-color: #0097a7;
+}
+
+.no-courses {
+  text-align: center;
+  padding: 40px;
+  color: #64748b;
+  font-size: 15px;
+  background: #ffffff;
+  border-radius: 12px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header {
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 12px 16px;
+  }
+  .search-bar {
+    order: 3;
+    width: 100%;
+  }
+  .main-nav ul {
+    overflow-x: auto;
+    justify-content: flex-start;
+    padding: 10px 16px;
+    margin: 0;
+  }
+  .course-section, .slogan-banner {
+    margin: 16px;
+    padding: 16px;
+  }
+}

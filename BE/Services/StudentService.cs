@@ -112,7 +112,7 @@ namespace BE.Services
                 if (!earnedBadgeIds.Contains(badge.Id))
                 {
                     bool isQualified = (badge.Name == "Chăm chỉ" && currentPoints >= 50) ||
-                                       (badge.Name == "Thông thái" && currentPoints >= 100);
+                                       (badge.Name == "Thông minh" && currentPoints >= 100);
 
                     if (isQualified)
                     {

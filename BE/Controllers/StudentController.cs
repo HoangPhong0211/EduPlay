@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using BE.Services;
@@ -42,6 +42,7 @@ namespace BE.Controllers
             return Ok(result);
         }
 
+        [AllowAnonymous]
         [HttpGet("roadmap/{gradeLevel}")]
         public async Task<IActionResult> GetRoadmap(int gradeLevel)
         {

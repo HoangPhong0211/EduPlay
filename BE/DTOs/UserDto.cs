@@ -10,5 +10,12 @@ namespace BE.DTOs
         
         // Danh sách tên học sinh do phụ huynh này quản lý
         public List<string> StudentNicknames { get; set; } = new List<string>();
+
+        // Thông tin liên hệ phụ huynh (nếu là Parent)
+        public string? Email { get; set; }
+        public string? PhoneNumber { get; set; }
+
+        // Điểm thưởng tích lũy (nếu là Student)
+        public int? TotalPoints { get; set; }
     }
 }

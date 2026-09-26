@@ -10,8 +10,7 @@ namespace BE.DTOs
         [Required(ErrorMessage = "Nội dung câu hỏi không được để trống")]
         public string Content { get; set; } = string.Empty;
         
-        [Required(ErrorMessage = "Loại câu hỏi không được để trống")]
-        public string QuestionType { get; set; } = string.Empty;
+        public string QuestionType { get; set; } = "Trắc nghiệm";
         
         [Required(ErrorMessage = "Độ khó không được để trống")]
         public string DifficultyLevel { get; set; } = string.Empty;
@@ -20,5 +19,41 @@ namespace BE.DTOs
         public string CorrectAnswer { get; set; } = string.Empty;
         
         public string? Hint { get; set; }
+
+        public string? OptionA { get; set; }
+        public string? OptionB { get; set; }
+        public string? OptionC { get; set; }
+        public string? OptionD { get; set; }
+    }
+
+    public class CreateTopicDto
+    {
+        [Required(ErrorMessage = "Khối lớp không được để trống")]
+        [Range(1, 3, ErrorMessage = "Khối lớp phải nằm trong khoảng từ 1 đến 3.")]
+        public int GradeLevel { get; set; }
+        
+        [Required(ErrorMessage = "Tên chương mục không được để trống")]
+        public string Name { get; set; } = string.Empty;
+        
+        public string? Description { get; set; }
+    }
+
+    public class CreateLessonDto
+    {
+        [Required(ErrorMessage = "ID khóa học không được để trống")]
+        public int TopicId { get; set; }
+        
+        [Required(ErrorMessage = "Tên bài học không được để trống")]
+        public string Title { get; set; } = string.Empty;
+        
+        [Required(ErrorMessage = "Thứ tự bài học không được để trống")]
+        [Range(1, int.MaxValue, ErrorMessage = "Thứ tự bài học phải lớn hơn 0.")]
+        public int OrderIndex { get; set; }
+    }
+
+    public class SaveHintDto
+    {
+        [Required(ErrorMessage = "Gợi ý không được để trống")]
+        public string Hint { get; set; } = string.Empty;
     }
 }

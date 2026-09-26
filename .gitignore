@@ -1,2 +1,4 @@
 BE/bin/
 BE/obj/
+# Ignore local secrets
+**/appsettings.Development.json

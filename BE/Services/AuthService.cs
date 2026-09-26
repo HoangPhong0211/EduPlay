@@ -1,4 +1,4 @@
-﻿using BE.Data;
+using BE.Data;
 using BE.Models;
 using BE.DTOs;
 using Microsoft.EntityFrameworkCore;
@@ -61,10 +61,14 @@ namespace BE.Services
                 await transaction.CommitAsync(); // Xác nhận Transaction thành công
                 return new AuthResponse { IsSuccess = true, Message = "Đăng ký thành công!" };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 await transaction.RollbackAsync(); // Hoàn tác nếu có lỗi
-                return new AuthResponse { IsSuccess = false, Message = "Có lỗi xảy ra trong quá trình lưu dữ liệu." };
+                Console.WriteLine($"[REGISTER ERROR] {ex}");
+                return new AuthResponse { 
+                    IsSuccess = false, 
+                    Message = $"Có lỗi xảy ra trong quá trình lưu dữ liệu: {ex.Message} {(ex.InnerException != null ? ex.InnerException.Message : "")}" 
+                };
             }
         }
 

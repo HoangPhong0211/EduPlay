@@ -1,0 +1,214 @@
+/* src/admin/AdminLayout.css */
+.admin-container {
+    display: flex;
+    height: 100vh;
+    background-color: #f4f6f8;
+    font-family: inherit;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Sidebar bên trái */
+.admin-sidebar {
+    width: 260px;
+    background-color: #1e293b;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+    z-index: 100;
+}
+
+.sidebar-logo {
+    padding: 22px 20px;
+    text-align: center;
+    border-bottom: 1px solid #334155;
+    color: #4dd0e1;
+}
+
+.sidebar-logo h2 {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin: 0;
+}
+
+.sidebar-nav {
+    flex: 1;
+    overflow-y: auto;
+    padding-top: 10px;
+}
+
+.sidebar-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-nav li a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    color: #94a3b8;
+    text-decoration: none;
+    border-left: 4px solid transparent;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.sidebar-nav li a:hover {
+    background-color: #334155;
+    color: #f1f5f9;
+}
+
+/* Mục đang chọn (Active NavLink) */
+.sidebar-nav li a.active {
+    background-color: #0f172a;
+    color: #ffffff;
+    border-left-color: #00bcd4;
+    font-weight: 600;
+}
+
+/* Vùng nội dung chính */
+.admin-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-width: 0;
+}
+
+/* Header */
+.admin-header {
+    height: 65px;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 28px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    flex-shrink: 0;
+}
+
+.admin-header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.admin-header h2 {
+    font-size: 18px;
+    color: #1e293b;
+    margin: 0;
+    font-weight: 700;
+}
+
+.admin-mobile-toggle {
+    display: none;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 18px;
+    cursor: pointer;
+    color: #334155;
+}
+
+/* Các hành động trên Header */
+.admin-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.admin-user-greeting {
+    font-size: 14px;
+    color: #475569;
+}
+
+.btn-view-site {
+    background-color: #f0fdf4;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+    padding: 7px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.btn-view-site:hover {
+    background-color: #dcfce7;
+}
+
+.btn-logout {
+    background-color: #fee2e2;
+    color: #dc2626;
+    border: 1px solid #fca5a5;
+    padding: 7px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    transition: all 0.2s;
+}
+
+.btn-logout:hover {
+    background-color: #fecaca;
+}
+
+/* Vùng Outlet chứa giao diện con */
+.admin-content {
+    padding: 28px;
+    flex: 1;
+    overflow-y: auto;
+    background-color: #f8fafc;
+}
+
+/* Backdrop cho mobile */
+.admin-sidebar-backdrop {
+    display: none;
+}
+
+/* Responsive cho thiết bị di động & máy tính bảng */
+@media (max-width: 768px) {
+    .admin-mobile-toggle {
+        display: block;
+    }
+
+    .admin-sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        transform: translateX(-100%);
+    }
+
+    .admin-sidebar.open {
+        transform: translateX(0);
+    }
+
+    .admin-sidebar-backdrop {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.45);
+        z-index: 90;
+    }
+
+    .admin-header {
+        padding: 0 16px;
+    }
+
+    .admin-user-greeting {
+        display: none;
+    }
+
+    .admin-content {
+        padding: 16px;
+    }
+}
