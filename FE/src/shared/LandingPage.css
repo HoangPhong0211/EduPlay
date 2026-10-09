@@ -255,7 +255,15 @@
   transition: color 0.2s;
 }
 
-.main-nav li:hover {
+.main-nav a {
+  text-decoration: none;
+  color: inherit;
+  display: inline-block;
+  transition: color 0.2s;
+}
+
+.main-nav li:hover,
+.main-nav a:hover {
   color: #00bcd4;
 }
 
@@ -362,19 +370,41 @@
 }
 
 .btn-start-learn {
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
   background-color: #00bcd4;
-  color: #ffffff;
+  color: #ffffff !important;
   border: none;
   padding: 10px 16px;
   border-radius: 8px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.2s;
 }
 
 .btn-start-learn:hover {
   background-color: #0097a7;
+  transform: translateY(-1px);
+}
+
+.btn-hero-explore {
+  display: inline-block;
+  background: #00838f;
+  color: #ffffff !important;
+  text-decoration: none;
+  padding: 10px 22px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 14px;
+  box-shadow: 0 4px 10px rgba(0, 131, 143, 0.25);
+  transition: all 0.2s;
+}
+
+.btn-hero-explore:hover {
+  background: #006064;
+  transform: translateY(-2px);
 }
 
 .no-courses {

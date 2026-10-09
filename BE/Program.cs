@@ -36,9 +36,10 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactFE", policy =>
     {
-        policy.WithOrigins("http://localhost:3000", "http://localhost:5173") // Port mặc định của React (Create React App hoặc Vite)
+        policy.SetIsOriginAllowed(origin => true) // Cho phép mọi cổng localhost của React/Vite (5173, 5174, 3000...)
               .AllowAnyHeader()
-              .AllowAnyMethod();
+              .AllowAnyMethod()
+              .AllowCredentials();
     });
 });
 
@@ -63,7 +64,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// Chỉ kích hoạt HttpsRedirection khi không phải môi trường Development
+// Tránh lỗi trình duyệt tự động chặn kết nối HTTP localhost hoặc lỗi chứng chỉ SSL
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
 // Kích hoạt CORS đã cài đặt ở trên (Lưu ý: Đặt trước UseAuthorization)
 app.UseCors("AllowReactFE"); 

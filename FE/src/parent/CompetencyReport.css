@@ -1,0 +1,356 @@
+/* ==========================================================================
+   CompetencyReport.css - Competency report and AI hint analysis styles
+   Theme: Royal Blue (#2563eb) and Slate Neutrals
+   ========================================================================== */
+
+.report-page {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  animation: repFade 0.2s ease-out;
+}
+
+@keyframes repFade {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 1. Header Card */
+.report-header-card {
+  background: #ffffff;
+  padding: 18px 22px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.report-header-info h1 {
+  font-size: 19px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 4px 0;
+  letter-spacing: -0.2px;
+}
+
+.report-header-info p {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+}
+
+.report-child-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.report-child-selector label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #475569;
+  white-space: nowrap;
+}
+
+.report-child-selector select {
+  padding: 7px 12px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #0f172a;
+  outline: none;
+  cursor: pointer;
+  min-width: 180px;
+  transition: all 0.15s ease;
+}
+
+.report-child-selector select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.report-alert-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+/* 2. Stats Grid */
+.report-content-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.report-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 14px;
+}
+
+.stat-card.highlight {
+  border-color: #bfdbfe;
+  background: #f8fafc;
+}
+
+.eval-badge {
+  font-size: 13px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-top: 2px;
+}
+
+.eval-badge.excellent { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+.eval-badge.good      { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+.eval-badge.average   { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+.eval-badge.warning   { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+.eval-badge.neutral   { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
+
+/* 3. Advice Card & Progress */
+.advice-card {
+  background: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.progress-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.progress-percent {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.progress-track {
+  width: 100%;
+  height: 8px;
+  background: #e2e8f0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  transition: width 0.3s ease;
+  border-radius: 4px;
+}
+
+.parent-advice-box {
+  background: #f8fafc;
+  border-radius: 6px;
+  border-left: 3px solid #2563eb;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.advice-tag {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #2563eb;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.advice-text {
+  font-size: 13px;
+  color: #334155;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* 4. Mistakes Section */
+.mistakes-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mistakes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.mistakes-count-badge {
+  font-size: 12px;
+  font-weight: 600;
+  color: #b91c1c;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.mistakes-empty-card {
+  background: #ffffff;
+  border: 1px dashed #cbd5e1;
+  border-radius: 8px;
+  padding: 36px 20px;
+  text-align: center;
+}
+
+.mistakes-empty-card h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #166534;
+  margin: 0 0 4px 0;
+}
+
+.mistakes-empty-card p {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+}
+
+.mistakes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mistake-item-card {
+  background: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mistake-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mistake-num {
+  font-size: 12px;
+  font-weight: 700;
+  color: #dc2626;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+.mistake-time {
+  font-size: 11.5px;
+  color: #64748b;
+}
+
+.mistake-question-content {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
+  line-height: 1.5;
+}
+
+.mistake-submitted-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+}
+
+.submitted-label {
+  color: #64748b;
+}
+
+.submitted-val-pill {
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  color: #b91c1c;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+/* AI Hint Callout */
+.ai-hint-callout {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 6px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ai-hint-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #1d4ed8;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.ai-hint-body {
+  font-size: 13px;
+  color: #1e3a8a;
+  line-height: 1.5;
+  white-space: pre-line;
+}
+
+.hint-not-available {
+  color: #64748b;
+  font-style: italic;
+  font-size: 12px;
+}
+
+/* Loading & Empty states */
+.report-loading-card,
+.report-empty-card {
+  background: #ffffff;
+  border: 1px dashed #cbd5e1;
+  border-radius: 8px;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.report-empty-card h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 6px 0;
+}
+
+.report-empty-card p {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0 0 16px 0;
+}

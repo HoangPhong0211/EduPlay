@@ -1,43 +1,43 @@
-/* CourseManagement.css - Quản lý Khóa học & Bài học */
+/* CourseManagement.css - Quản lý Khóa học & Bài học (Minimal & Unified Theme) */
 
 .course-mgmt-container {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  animation: fadeIn 0.3s ease-out;
+  gap: 18px;
+  animation: fadeIn 0.2s ease-out;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
+  from { opacity: 0; transform: translateY(4px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* 1. Header Section */
+/* ==========================================================================
+   1. Header Section
+   ========================================================================== */
 .mgmt-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   flex-wrap: wrap;
   gap: 16px;
   background: #ffffff;
-  padding: 24px 28px;
-  border-radius: 16px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+  padding: 18px 22px;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
   border: 1px solid #e2e8f0;
 }
 
 .mgmt-header-info h1 {
-  font-size: 22px;
-  font-weight: 800;
+  font-size: 18px;
+  font-weight: 700;
   color: #0f172a;
-  margin-bottom: 6px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  margin: 0 0 4px 0;
+  letter-spacing: -0.2px;
 }
 
 .mgmt-header-info p {
-  font-size: 14px;
+  font-size: 13px;
   color: #64748b;
   margin: 0;
 }
@@ -45,133 +45,124 @@
 .mgmt-header-actions {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   flex-wrap: wrap;
 }
 
-/* Nút bấm hành động */
+/* Nút bấm hành động chung */
 .btn-primary {
-  background: linear-gradient(135deg, #00bcd4 0%, #0097a7 100%);
+  background-color: #2563eb;
   color: #ffffff;
   border: none;
-  padding: 10px 18px;
-  border-radius: 10px;
-  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13.5px;
   font-weight: 600;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  box-shadow: 0 4px 12px rgba(0, 188, 212, 0.25);
-  transition: all 0.2s ease;
+  gap: 6px;
+  transition: all 0.15s ease;
 }
 
 .btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(0, 188, 212, 0.35);
+  background-color: #1d4ed8;
 }
 
 .btn-secondary {
-  background: #f1f5f9;
+  background-color: #ffffff;
   color: #334155;
   border: 1px solid #cbd5e1;
-  padding: 10px 16px;
-  border-radius: 10px;
-  font-size: 14px;
-  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 13.5px;
+  font-weight: 500;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  transition: all 0.2s ease;
+  gap: 6px;
+  transition: all 0.15s ease;
 }
 
 .btn-secondary:hover {
-  background: #e2e8f0;
+  background-color: #f8fafc;
+  border-color: #94a3b8;
   color: #0f172a;
 }
 
-/* 2. Thống kê nhanh (Stats Cards) */
+/* ==========================================================================
+   2. Thống kê nhanh (Stats Cards Grid - Unified Metrics)
+   ========================================================================== */
 .mgmt-stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
+  gap: 14px;
 }
 
 .stat-card {
   background: #ffffff;
-  padding: 20px 24px;
-  border-radius: 14px;
+  padding: 16px 18px;
+  border-radius: 8px;
   border: 1px solid #e2e8f0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
   display: flex;
-  align-items: center;
-  gap: 16px;
-  transition: transform 0.2s ease;
+  flex-direction: column;
 }
 
-.stat-card:hover {
-  transform: translateY(-2px);
-}
-
-.stat-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
+.stat-details {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 22px;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.stat-icon.blue { background: #e0f2fe; color: #0284c7; }
-.stat-icon.green { background: #dcfce7; color: #16a34a; }
-.stat-icon.amber { background: #fef3c7; color: #d97706; }
-.stat-icon.purple { background: #f3e8ff; color: #9333ea; }
-
-.stat-details h3 {
-  font-size: 24px;
-  font-weight: 800;
-  color: #0f172a;
-  margin: 0 0 4px 0;
-}
-
-.stat-details span {
-  font-size: 13px;
-  font-weight: 500;
+.stat-label {
+  font-size: 12px;
+  font-weight: 600;
   color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
 }
 
-/* 3. Filter & Search Controls */
+.stat-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+  line-height: 1.2;
+}
+
+/* ==========================================================================
+   3. Filter & Search Controls Toolbar
+   ========================================================================== */
 .mgmt-controls {
   background: #ffffff;
-  padding: 16px 24px;
-  border-radius: 14px;
+  padding: 12px 18px;
+  border-radius: 8px;
   border: 1px solid #e2e8f0;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 12px;
 }
 
 .grade-filter-pills {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
 }
 
 .filter-pill {
   background: #f8fafc;
   border: 1px solid #e2e8f0;
-  padding: 8px 16px;
-  border-radius: 20px;
+  padding: 6px 12px;
+  border-radius: 6px;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
   color: #475569;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .filter-pill:hover {
@@ -180,27 +171,25 @@
 }
 
 .filter-pill.active {
-  background: #00bcd4;
+  background-color: #2563eb;
   color: #ffffff;
-  border-color: #00bcd4;
-  box-shadow: 0 2px 8px rgba(0, 188, 212, 0.3);
+  border-color: #2563eb;
 }
 
 .search-box {
   display: flex;
   align-items: center;
-  background: #f8fafc;
-  border: 1.5px solid #e2e8f0;
-  border-radius: 10px;
-  padding: 6px 14px;
-  width: 280px;
-  transition: all 0.2s ease;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 5px 10px;
+  width: 260px;
+  transition: all 0.15s ease;
 }
 
 .search-box:focus-within {
-  background: #ffffff;
-  border-color: #00bcd4;
-  box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.15);
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
 }
 
 .search-box input {
@@ -210,32 +199,37 @@
   width: 100%;
   font-size: 13px;
   color: #1e293b;
-  padding: 4px;
+  padding: 2px 4px;
 }
 
-/* 4. Tree View - Topic Accordion */
+.search-box input::placeholder {
+  color: #94a3b8;
+}
+
+/* ==========================================================================
+   4. Tree View - Topic Accordion
+   ========================================================================== */
 .tree-view-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
 }
 
 .topic-node {
   background: #ffffff;
-  border-radius: 14px;
+  border-radius: 8px;
   border: 1px solid #e2e8f0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
   overflow: hidden;
-  transition: all 0.2s ease;
+  transition: border-color 0.15s ease;
 }
 
 .topic-node:hover {
   border-color: #cbd5e1;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
 .topic-header {
-  padding: 18px 24px;
+  padding: 14px 18px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -246,61 +240,57 @@
 }
 
 .topic-header:hover {
-  background: #fafafa;
+  background: #f8fafc;
 }
 
 .topic-title-area {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
   flex: 1;
   min-width: 0;
 }
 
 .expand-chevron {
   font-size: 14px;
+  font-weight: 700;
   color: #64748b;
   transition: transform 0.2s ease;
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f1f5f9;
-  border-radius: 50%;
   flex-shrink: 0;
 }
 
 .expand-chevron.expanded {
   transform: rotate(90deg);
-  background: #e0f7fa;
-  color: #00838f;
+  color: #2563eb;
 }
 
 .grade-badge {
-  padding: 4px 10px;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
   flex-shrink: 0;
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
 }
-
-.grade-badge.g1 { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
-.grade-badge.g2 { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
-.grade-badge.g3 { background: #f3e8ff; color: #7e22ce; border: 1px solid #e9d5ff; }
 
 .topic-name-wrap {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
   min-width: 0;
 }
 
 .topic-name {
-  font-size: 16px;
-  font-weight: 700;
-  color: #1e293b;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
@@ -308,7 +298,7 @@
 }
 
 .topic-desc {
-  font-size: 13px;
+  font-size: 12px;
   color: #64748b;
   margin: 0;
   white-space: nowrap;
@@ -319,111 +309,103 @@
 .topic-actions-area {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   flex-shrink: 0;
 }
 
 .lesson-count-tag {
-  background: #f8fafc;
+  background: #f1f5f9;
   color: #475569;
   border: 1px solid #e2e8f0;
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11.5px;
+  font-weight: 500;
 }
 
-.btn-action-icon {
-  background: none;
-  border: none;
-  font-size: 15px;
-  padding: 6px 10px;
-  border-radius: 6px;
+/* Nút thao tác dạng chữ gọn gàng */
+.btn-action-text {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  font-size: 12px;
+  padding: 4px 9px;
+  border-radius: 5px;
   cursor: pointer;
   transition: all 0.15s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-weight: 600;
+  color: #334155;
+  font-weight: 500;
 }
 
-.btn-action-icon.add-lesson {
-  background: #e0f7fa;
-  color: #00838f;
-  font-size: 12px;
+.btn-action-text:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+  border-color: #94a3b8;
 }
 
-.btn-action-icon.add-lesson:hover {
-  background: #b2ebf2;
-}
-
-.btn-action-icon.edit {
-  color: #3b82f6;
+.btn-action-text.add-lesson {
   background: #eff6ff;
+  color: #1d4ed8;
+  border-color: #bfdbfe;
 }
 
-.btn-action-icon.edit:hover {
+.btn-action-text.add-lesson:hover {
   background: #dbeafe;
 }
 
-.btn-action-icon.delete {
-  color: #ef4444;
+.btn-action-text.delete {
+  color: #dc2626;
+  border-color: #fecaca;
+  background: #ffffff;
+}
+
+.btn-action-text.delete:hover {
   background: #fef2f2;
 }
 
-.btn-action-icon.delete:hover {
-  background: #fee2e2;
-}
-
-/* 5. Cấp 2 - Danh sách bài học (Lesson Drawer) */
+/* ==========================================================================
+   5. Cấp 2 - Danh sách bài học
+   ========================================================================== */
 .lessons-container {
   border-top: 1px solid #f1f5f9;
   background: #f8fafc;
-  padding: 16px 24px 20px 48px;
-  animation: slideDown 0.2s ease-out;
-}
-
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-4px); }
-  to { opacity: 1; transform: translateY(0); }
+  padding: 12px 18px 14px 34px;
 }
 
 .lesson-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 6px;
 }
 
 .lesson-item {
   background: #ffffff;
   border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  padding: 12px 18px;
+  border-radius: 6px;
+  padding: 8px 14px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: all 0.15s ease;
+  transition: border-color 0.15s ease;
 }
 
 .lesson-item:hover {
   border-color: #cbd5e1;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
 }
 
 .lesson-info {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .order-pill {
-  background: #00bcd4;
+  background: #2563eb;
   color: #ffffff;
-  font-size: 12px;
-  font-weight: 700;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 600;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -431,73 +413,80 @@
 }
 
 .lesson-title {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
-  color: #334155;
+  color: #1e293b;
+}
+
+.lesson-q-count {
+  font-size: 11.5px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-weight: 500;
 }
 
 .lesson-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .empty-lessons-notice {
-  padding: 20px;
+  padding: 14px;
   text-align: center;
   color: #64748b;
-  font-size: 13px;
+  font-size: 12.5px;
   background: #ffffff;
   border: 1px dashed #cbd5e1;
-  border-radius: 10px;
+  border-radius: 6px;
 }
 
-/* 6. Trạng thái rỗng (Empty State) */
+/* ==========================================================================
+   6. Trạng thái rỗng (Empty State)
+   ========================================================================== */
 .empty-courses-card {
   background: #ffffff;
-  border-radius: 16px;
+  border-radius: 8px;
   border: 1px dashed #cbd5e1;
-  padding: 50px 30px;
+  padding: 40px 20px;
   text-align: center;
 }
 
 .empty-courses-card p {
   color: #64748b;
-  font-size: 15px;
-  margin-bottom: 20px;
+  font-size: 13.5px;
+  margin-bottom: 14px;
 }
 
-/* 7. Modal System */
+/* ==========================================================================
+   7. Modal System
+   ========================================================================== */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.6);
-  backdrop-filter: blur(4px);
+  background: rgba(15, 23, 42, 0.45);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  padding: 20px;
-  animation: fadeIn 0.2s ease-out;
+  padding: 16px;
 }
 
 .modal-content {
   background: #ffffff;
-  border-radius: 18px;
+  border-radius: 8px;
   width: 100%;
-  max-width: 520px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  max-width: 480px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
   overflow: hidden;
-  animation: popIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@keyframes popIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+  border: 1px solid #e2e8f0;
 }
 
 .modal-header {
-  padding: 20px 24px;
+  padding: 14px 18px;
   border-bottom: 1px solid #e2e8f0;
   display: flex;
   justify-content: space-between;
@@ -505,7 +494,7 @@
 }
 
 .modal-header h3 {
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 700;
   color: #0f172a;
   margin: 0;
@@ -514,12 +503,12 @@
 .btn-close-modal {
   background: none;
   border: none;
-  font-size: 20px;
+  font-size: 16px;
   color: #94a3b8;
   cursor: pointer;
   padding: 4px;
   line-height: 1;
-  border-radius: 6px;
+  border-radius: 4px;
 }
 
 .btn-close-modal:hover {
@@ -528,21 +517,21 @@
 }
 
 .modal-body {
-  padding: 24px;
+  padding: 18px;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 14px;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
   text-align: left;
 }
 
 .form-group label {
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 600;
   color: #334155;
 }
@@ -551,93 +540,89 @@
 .form-group select,
 .form-group textarea {
   width: 100%;
-  padding: 10px 14px;
-  border: 1.5px solid #cbd5e1;
+  padding: 8px 10px;
+  border: 1px solid #cbd5e1;
   background: #ffffff;
-  border-radius: 10px;
-  font-size: 14px;
+  border-radius: 6px;
+  font-size: 13px;
   outline: none;
   font-family: inherit;
   box-sizing: border-box;
-  transition: all 0.2s ease;
+  transition: border-color 0.15s ease;
 }
 
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
-  border-color: #00bcd4;
-  box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.15);
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
 }
 
 .form-group textarea {
   resize: vertical;
-  min-height: 80px;
+  min-height: 70px;
 }
 
 .modal-footer {
-  padding: 16px 24px;
+  padding: 12px 18px;
   background: #f8fafc;
   border-top: 1px solid #e2e8f0;
   display: flex;
   justify-content: flex-end;
-  gap: 12px;
+  gap: 8px;
 }
 
 .btn-delete-confirm {
-  background: #ef4444;
+  background: #dc2626;
   color: white;
   border: none;
-  padding: 10px 18px;
-  border-radius: 10px;
-  font-size: 14px;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s;
 }
 
 .btn-delete-confirm:hover {
-  background: #dc2626;
+  background: #b91c1c;
 }
 
-/* 8. Toast Notification */
+/* ==========================================================================
+   8. Toast Notification
+   ========================================================================== */
 .mgmt-toast {
   position: fixed;
   bottom: 24px;
   right: 24px;
-  padding: 12px 20px;
-  border-radius: 12px;
-  font-size: 14px;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 13px;
   font-weight: 600;
   z-index: 2000;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
   display: flex;
   align-items: center;
-  gap: 10px;
-  animation: slideUp 0.25s ease-out;
-}
-
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
+  gap: 8px;
 }
 
 .mgmt-toast.success {
   background: #0f172a;
-  color: #4ade80;
-  border: 1px solid #22c55e;
+  color: #ffffff;
+  border-left: 3px solid #22c55e;
 }
 
 .mgmt-toast.error {
   background: #0f172a;
-  color: #f87171;
-  border: 1px solid #ef4444;
+  color: #ffffff;
+  border-left: 3px solid #ef4444;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
   .mgmt-header {
     flex-direction: column;
-    padding: 16px;
+    align-items: flex-start;
+    padding: 14px;
   }
   .mgmt-controls {
     flex-direction: column;
@@ -649,14 +634,14 @@
   .topic-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 12px;
-    padding: 14px;
+    gap: 10px;
+    padding: 12px;
   }
   .topic-actions-area {
     width: 100%;
     justify-content: space-between;
   }
   .lessons-container {
-    padding: 14px 14px 14px 24px;
+    padding: 10px 10px 12px 18px;
   }
 }

@@ -52,5 +52,24 @@ namespace BE.Controllers
             var result = await _studentService.GetRoadmapAsync(gradeLevel);
             return Ok(result);
         }
+
+        [AllowAnonymous]
+        [HttpGet("lesson/{lessonId}/questions")]
+        public async Task<IActionResult> GetLessonQuestions(int lessonId)
+        {
+            var result = await _studentService.GetLessonQuestionsAsync(lessonId);
+            return Ok(result);
+        }
+
+        [HttpGet("assignments")]
+        public async Task<IActionResult> GetMyAssignments()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+                return Unauthorized("Phiên đăng nhập không hợp lệ.");
+
+            var result = await _studentService.GetMyAssignmentsAsync(userId);
+            return Ok(result);
+        }
     }
 }

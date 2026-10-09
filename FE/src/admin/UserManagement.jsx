@@ -194,9 +194,7 @@ function UserManagement() {
       {/* 1. Header Trang */}
       <div className="usermgmt-header">
         <div className="usermgmt-header-info">
-          <h1>
-            <span>👥</span> Quản lý Người dùng
-          </h1>
+          <h1>Quản lý Người dùng</h1>
           <p>
             Xem danh sách tài khoản, phân quyền vai trò và quản trị trạng thái kích hoạt trong hệ thống EduPlay.
           </p>
@@ -204,12 +202,12 @@ function UserManagement() {
         <div className="usermgmt-header-actions">
           <button
             type="button"
-            className="btn-refresh"
+            className="btn-secondary"
             onClick={() => loadUsers(true)}
             disabled={isLoading}
             title="Làm mới danh sách người dùng"
           >
-            🔄 {isLoading ? 'Đang tải...' : 'Làm mới'}
+            {isLoading ? 'Đang tải...' : 'Làm mới'}
           </button>
         </div>
       </div>
@@ -217,45 +215,37 @@ function UserManagement() {
       {/* 2. Thống kê nhanh người dùng */}
       <div className="usermgmt-stats-grid">
         <div className="usermgmt-stat-card">
-          <div className="stat-icon blue">👥</div>
-          <div className="stat-content">
-            <h3>{stats.total}</h3>
-            <span>Tổng số tài khoản</span>
+          <div className="stat-details">
+            <span className="stat-label">Tổng số tài khoản</span>
+            <h3 className="stat-value">{stats.total}</h3>
           </div>
         </div>
 
         <div className="usermgmt-stat-card">
-          <div className="stat-icon purple">🛡️</div>
-          <div className="stat-content">
-            <h3>{stats.admin}</h3>
-            <span>Quản trị viên</span>
+          <div className="stat-details">
+            <span className="stat-label">Quản trị viên</span>
+            <h3 className="stat-value">{stats.admin}</h3>
           </div>
         </div>
 
         <div className="usermgmt-stat-card">
-          <div className="stat-icon amber">👨‍👩‍👧</div>
-          <div className="stat-content">
-            <h3>{stats.parent}</h3>
-            <span>Phụ huynh</span>
+          <div className="stat-details">
+            <span className="stat-label">Phụ huynh</span>
+            <h3 className="stat-value">{stats.parent}</h3>
           </div>
         </div>
 
         <div className="usermgmt-stat-card">
-          <div className="stat-icon green">🎒</div>
-          <div className="stat-content">
-            <h3>{stats.student}</h3>
-            <span>Học sinh</span>
+          <div className="stat-details">
+            <span className="stat-label">Học sinh</span>
+            <h3 className="stat-value">{stats.student}</h3>
           </div>
         </div>
 
         <div className="usermgmt-stat-card">
-          <div className="stat-icon status">
-            <span className="dot-green" title="Đang hoạt động">🟢</span>
-            <span className="dot-red" title="Đã bị khóa">🔴</span>
-          </div>
-          <div className="stat-content">
-            <h3>{stats.active} <small style={{ fontSize: '14px', color: '#ef4444', fontWeight: 600 }}>/ {stats.locked} khóa</small></h3>
-            <span>Trạng thái hoạt động</span>
+          <div className="stat-details">
+            <span className="stat-label">Đang hoạt động / Khóa</span>
+            <h3 className="stat-value">{stats.active} / {stats.locked}</h3>
           </div>
         </div>
       </div>
@@ -271,9 +261,9 @@ function UserManagement() {
             onChange={(e) => setSelectedRole(e.target.value)}
           >
             <option value="">Tất cả vai trò ({stats.total})</option>
-            <option value="Admin">🛡️ Quản trị viên ({stats.admin})</option>
-            <option value="Parent">👨‍👩‍👧 Phụ huynh ({stats.parent})</option>
-            <option value="Student">🎒 Học sinh ({stats.student})</option>
+            <option value="Admin">Quản trị viên ({stats.admin})</option>
+            <option value="Parent">Phụ huynh ({stats.parent})</option>
+            <option value="Student">Học sinh ({stats.student})</option>
           </select>
         </div>
 
@@ -286,8 +276,8 @@ function UserManagement() {
             onChange={(e) => setSelectedStatus(e.target.value)}
           >
             <option value="">Tất cả trạng thái</option>
-            <option value="active">🟢 Đang hoạt động ({stats.active})</option>
-            <option value="locked">🔴 Đã bị khóa ({stats.locked})</option>
+            <option value="active">Đang hoạt động ({stats.active})</option>
+            <option value="locked">Đã bị khóa ({stats.locked})</option>
           </select>
         </div>
 
@@ -295,7 +285,6 @@ function UserManagement() {
         <div className="search-box-wrap">
           <label htmlFor="user-search">Tìm kiếm:</label>
           <div className="search-input-box">
-            <span className="search-icon">🔍</span>
             <input
               id="user-search"
               type="text"
@@ -325,12 +314,10 @@ function UserManagement() {
       {/* 4. Bảng Dữ Liệu Người Dùng (Data Table) */}
       {isLoading ? (
         <div className="usermgmt-loading-card">
-          <div className="loading-spinner">⏳</div>
           <div className="loading-text">Đang tải danh sách người dùng...</div>
         </div>
       ) : filteredUsers.length === 0 ? (
         <div className="usermgmt-empty-card">
-          <div className="empty-icon">📭</div>
           <h3>Không tìm thấy người dùng phù hợp</h3>
           <p>
             {searchQuery || selectedRole || selectedStatus
@@ -361,7 +348,7 @@ function UserManagement() {
                   <th>Tài khoản & Ngày tạo</th>
                   <th style={{ width: '150px' }}>Vai trò</th>
                   <th>Thông tin hồ sơ liên kết</th>
-                  <th style={{ width: '140px', textAlign: 'center' }}>Trạng thái</th>
+                  <th style={{ width: '130px', textAlign: 'center' }}>Trạng thái</th>
                   <th style={{ width: '150px', textAlign: 'center' }}>Hành động</th>
                 </tr>
               </thead>
@@ -381,13 +368,13 @@ function UserManagement() {
                       {/* Cột 2: Tài khoản & Ngày tạo */}
                       <td>
                         <div className="user-profile-cell">
-                          <div className={`user-avatar ${u.role.toLowerCase()}`}>
+                          <div className="user-avatar">
                             {initialLetter}
                           </div>
                           <div className="user-profile-info">
                             <span className="user-username">{u.username}</span>
                             <span className="user-created-at">
-                              🕒 {formatDateTime(u.createdAt)}
+                              {formatDateTime(u.createdAt)}
                             </span>
                           </div>
                         </div>
@@ -395,21 +382,11 @@ function UserManagement() {
 
                       {/* Cột 3: Vai trò */}
                       <td>
-                        {u.role === 'Admin' && (
-                          <span className="role-badge admin">
-                            🛡️ Quản trị viên
-                          </span>
-                        )}
-                        {u.role === 'Parent' && (
-                          <span className="role-badge parent">
-                            👨‍👩‍👧 Phụ huynh
-                          </span>
-                        )}
-                        {u.role === 'Student' && (
-                          <span className="role-badge student">
-                            🎒 Học sinh
-                          </span>
-                        )}
+                        <span className="role-badge">
+                          {u.role === 'Admin' && 'Quản trị viên'}
+                          {u.role === 'Parent' && 'Phụ huynh'}
+                          {u.role === 'Student' && 'Học sinh'}
+                        </span>
                       </td>
 
                       {/* Cột 4: Thông tin hồ sơ liên kết */}
@@ -418,8 +395,8 @@ function UserManagement() {
                           {u.role === 'Parent' && (
                             <>
                               <div className="contact-info">
-                                {u.email && <span>📧 {u.email}</span>}
-                                {u.phoneNumber && <span>📞 {u.phoneNumber}</span>}
+                                {u.email && <span>{u.email}</span>}
+                                {u.phoneNumber && <span>{u.phoneNumber}</span>}
                                 {!u.email && !u.phoneNumber && <span className="text-muted">Chưa cập nhật liên hệ</span>}
                               </div>
                               {u.studentNicknames && u.studentNicknames.length > 0 ? (
@@ -427,7 +404,7 @@ function UserManagement() {
                                   <span className="children-label">Con:</span>
                                   {u.studentNicknames.map((nick, idx) => (
                                     <span key={idx} className="child-chip">
-                                      👶 {nick}
+                                      {nick}
                                     </span>
                                   ))}
                                 </div>
@@ -447,7 +424,7 @@ function UserManagement() {
                                 </span>
                               )}
                               <span className="student-points-chip">
-                                ⭐ {u.totalPoints || 0} điểm
+                                {u.totalPoints || 0} điểm
                               </span>
                             </div>
                           )}
@@ -464,48 +441,48 @@ function UserManagement() {
                       <td style={{ textAlign: 'center' }}>
                         {isUserActive ? (
                           <span className="status-pill active" title="Tài khoản đang hoạt động bình thường">
-                            <span className="status-dot"></span> Hoạt động
+                            Hoạt động
                           </span>
                         ) : (
                           <span className="status-pill locked" title="Tài khoản đã bị khóa, không thể đăng nhập">
-                            <span className="status-dot"></span> Đã khóa
+                            Đã khóa
                           </span>
                         )}
                       </td>
 
                       {/* Cột 6: Hành động */}
-                      <td>
+                      <td style={{ textAlign: 'center' }}>
                         <div className="user-action-buttons">
                           {/* Nút Xem chi tiết */}
                           <button
                             type="button"
-                            className="btn-action view"
+                            className="btn-action-text"
                             onClick={() => setDetailsModal({ isOpen: true, user: u })}
                             title="Xem hồ sơ chi tiết người dùng"
                           >
-                            👁️
+                            Chi tiết
                           </button>
 
                           {/* Nút Khóa / Mở khóa */}
                           {isUserActive ? (
                             <button
                               type="button"
-                              className="btn-action lock"
+                              className="btn-action-text delete"
                               onClick={() => handleOpenToggleConfirm(u)}
                               disabled={isAdminUser}
                               title={isAdminUser ? 'Không thể khóa tài khoản Admin' : 'Khóa tài khoản này'}
                             >
-                              🔒 Khóa
+                              Khóa
                             </button>
                           ) : (
                             <button
                               type="button"
-                              className="btn-action unlock"
+                              className="btn-action-text unlock"
                               onClick={() => handleOpenToggleConfirm(u)}
                               disabled={isAdminUser}
                               title="Mở khóa tài khoản này"
                             >
-                              🔓 Mở
+                              Mở khóa
                             </button>
                           )}
                         </div>
@@ -528,9 +505,6 @@ function UserManagement() {
           <div className="modal-dialog" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <div className="modal-title-wrap">
-                <span className="modal-icon">
-                  {confirmModal.user.isActive ? '🔒' : '🔓'}
-                </span>
                 <h3>
                   {confirmModal.user.isActive ? 'Xác nhận khóa tài khoản' : 'Xác nhận mở khóa tài khoản'}
                 </h3>
@@ -552,11 +526,11 @@ function UserManagement() {
 
               {confirmModal.user.isActive ? (
                 <div className="alert-callout danger">
-                  <strong>⚠️ Lưu ý quan trọng:</strong> Khi bị khóa, người dùng này sẽ lập tức không thể đăng nhập vào ứng dụng và nhận thông báo liên hệ Quản trị viên.
+                  <strong>Lưu ý:</strong> Khi bị khóa, người dùng này sẽ lập tức không thể đăng nhập vào ứng dụng và nhận thông báo liên hệ Quản trị viên.
                 </div>
               ) : (
                 <div className="alert-callout info">
-                  <strong>ℹ️ Thông tin:</strong> Sau khi mở khóa, người dùng sẽ có thể đăng nhập và tiếp tục sử dụng ứng dụng bình thường.
+                  <strong>Thông tin:</strong> Sau khi mở khóa, người dùng sẽ có thể đăng nhập và tiếp tục sử dụng ứng dụng bình thường.
                 </div>
               )}
             </div>
@@ -572,7 +546,7 @@ function UserManagement() {
               </button>
               <button
                 type="button"
-                className={`btn-modal-action ${confirmModal.user.isActive ? 'danger' : 'success'}`}
+                className={`btn-modal-action ${confirmModal.user.isActive ? 'danger' : 'primary'}`}
                 onClick={handleConfirmToggle}
                 disabled={confirmModal.isSubmitting}
               >
@@ -596,7 +570,6 @@ function UserManagement() {
           <div className="modal-dialog details-dialog" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <div className="modal-title-wrap">
-                <span className="modal-icon">👤</span>
                 <h3>Hồ sơ Người dùng</h3>
               </div>
               <button
@@ -611,19 +584,19 @@ function UserManagement() {
             <div className="modal-body">
               {/* Card định danh người dùng */}
               <div className="user-id-banner">
-                <div className={`large-avatar ${detailsModal.user.role.toLowerCase()}`}>
+                <div className="large-avatar">
                   {(detailsModal.user.username || 'U')[0].toUpperCase()}
                 </div>
                 <div className="banner-details">
                   <h4 className="banner-username">{detailsModal.user.username}</h4>
                   <div className="banner-badges">
-                    <span className={`role-badge ${detailsModal.user.role.toLowerCase()}`}>
-                      {detailsModal.user.role === 'Admin' && '🛡️ Quản trị viên'}
-                      {detailsModal.user.role === 'Parent' && '👨‍👩‍👧 Phụ huynh'}
-                      {detailsModal.user.role === 'Student' && '🎒 Học sinh'}
+                    <span className="role-badge">
+                      {detailsModal.user.role === 'Admin' && 'Quản trị viên'}
+                      {detailsModal.user.role === 'Parent' && 'Phụ huynh'}
+                      {detailsModal.user.role === 'Student' && 'Học sinh'}
                     </span>
                     <span className={`status-pill ${detailsModal.user.isActive ? 'active' : 'locked'}`}>
-                      {detailsModal.user.isActive ? '🟢 Đang hoạt động' : '🔴 Bị khóa'}
+                      {detailsModal.user.isActive ? 'Đang hoạt động' : 'Bị khóa'}
                     </span>
                   </div>
                 </div>
@@ -659,8 +632,8 @@ function UserManagement() {
                         {detailsModal.user.studentNicknames && detailsModal.user.studentNicknames.length > 0 ? (
                           <div className="children-chips">
                             {detailsModal.user.studentNicknames.map((nick, idx) => (
-                              <span key={idx} className="child-chip">
-                                👶 {nick}
+                              <span key={nick || idx} className="child-chip">
+                                {nick}
                               </span>
                             ))}
                           </div>
@@ -683,8 +656,8 @@ function UserManagement() {
 
                     <div className="info-row">
                       <span className="info-label">Tổng điểm thưởng tích lũy:</span>
-                      <span className="info-value" style={{ color: '#16a34a', fontWeight: 800 }}>
-                        ⭐ {detailsModal.user.totalPoints || 0} điểm
+                      <span className="info-value" style={{ color: '#16a34a', fontWeight: 700 }}>
+                        {detailsModal.user.totalPoints || 0} điểm
                       </span>
                     </div>
                   </>
@@ -693,7 +666,7 @@ function UserManagement() {
                 {detailsModal.user.role === 'Admin' && (
                   <div className="info-row">
                     <span className="info-label">Quyền hạn hệ thống:</span>
-                    <span className="info-value" style={{ color: '#7c3aed', fontWeight: 700 }}>
+                    <span className="info-value" style={{ color: '#2563eb', fontWeight: 600 }}>
                       Quản lý Khóa học, Ngân hàng câu hỏi, Sinh đề & Quản trị tài khoản
                     </span>
                   </div>
@@ -717,7 +690,6 @@ function UserManagement() {
       {/* 7. Toast Thông báo */}
       {toast.show && (
         <div className={`usermgmt-toast ${toast.type}`}>
-          <span className="toast-icon">{toast.type === 'success' ? '✅' : '❌'}</span>
           <span className="toast-text">{toast.message}</span>
         </div>
       )}

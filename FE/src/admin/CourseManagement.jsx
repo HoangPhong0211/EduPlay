@@ -413,17 +413,15 @@ function CourseManagement() {
       {/* 1. Header Section */}
       <div className="mgmt-header">
         <div className="mgmt-header-info">
-          <h1>
-            <span>📚</span> Quản lý Khóa học & Bài học
-          </h1>
+          <h1>Quản lý Khóa học & Bài học</h1>
           <p>Tổ chức chương trình học theo Khối lớp (Lớp 1, 2, 3), phân cấp Chương mục và Bài học trực quan.</p>
         </div>
         <div className="mgmt-header-actions">
           <button type="button" className="btn-secondary" onClick={() => loadData(true)} title="Làm mới dữ liệu">
-            🔄 Làm mới
+            Làm mới
           </button>
           <button type="button" className="btn-primary" onClick={handleOpenCreateTopic}>
-            ➕ Thêm Chương mới
+            Thêm Chương mục
           </button>
         </div>
       </div>
@@ -431,31 +429,27 @@ function CourseManagement() {
       {/* 2. Thống kê nhanh (Stats Cards) */}
       <div className="mgmt-stats-grid">
         <div className="stat-card">
-          <div className="stat-icon blue">📁</div>
           <div className="stat-details">
-            <h3>{stats.totalTopics}</h3>
-            <span>Tổng số chương</span>
+            <span className="stat-label">Tổng số chương mục</span>
+            <h3 className="stat-value">{stats.totalTopics}</h3>
           </div>
         </div>
         <div className="stat-card">
-          <div className="stat-icon green">📖</div>
           <div className="stat-details">
-            <h3>{stats.totalLessons}</h3>
-            <span>Tổng số bài học</span>
+            <span className="stat-label">Tổng số bài học</span>
+            <h3 className="stat-value">{stats.totalLessons}</h3>
           </div>
         </div>
         <div className="stat-card">
-          <div className="stat-icon amber">🌱</div>
           <div className="stat-details">
-            <h3>{stats.grade1} chương</h3>
-            <span>Chương trình Lớp 1</span>
+            <span className="stat-label">Chương trình Lớp 1</span>
+            <h3 className="stat-value">{stats.grade1} chương</h3>
           </div>
         </div>
         <div className="stat-card">
-          <div className="stat-icon purple">🚀</div>
           <div className="stat-details">
-            <h3>{stats.grade2 + stats.grade3} chương</h3>
-            <span>Chương trình Lớp 2 & 3</span>
+            <span className="stat-label">Chương trình Lớp 2 & 3</span>
+            <h3 className="stat-value">{stats.grade2 + stats.grade3} chương</h3>
           </div>
         </div>
       </div>
@@ -501,11 +495,10 @@ function CourseManagement() {
             onClick={expandedTopics.size > 0 ? collapseAll : expandAll}
             title={expandedTopics.size > 0 ? 'Thu gọn tất cả' : 'Mở rộng tất cả'}
           >
-            {expandedTopics.size > 0 ? '▲ Thu gọn hết' : '▼ Mở rộng hết'}
+            {expandedTopics.size > 0 ? 'Thu gọn tất cả' : 'Mở rộng tất cả'}
           </button>
 
           <div className="search-box">
-            <span style={{ color: '#94a3b8', marginRight: '6px' }}>🔍</span>
             <input
               type="text"
               placeholder="Tìm theo tên chương, bài học..."
@@ -533,13 +526,11 @@ function CourseManagement() {
 
       {/* 4. Danh sách Khóa học & Bài học dạng Tree-View */}
       {isLoading ? (
-        <div style={{ textAlign: 'center', padding: '60px 20px', background: '#fff', borderRadius: '16px' }}>
-          <div style={{ fontSize: '32px', marginBottom: '12px' }}>⏳</div>
+        <div style={{ textAlign: 'center', padding: '50px 20px', background: '#fff', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
           <div style={{ fontWeight: 600, color: '#475569' }}>Đang tải dữ liệu khóa học...</div>
         </div>
       ) : filteredTopics.length === 0 ? (
         <div className="empty-courses-card">
-          <div style={{ fontSize: '48px', marginBottom: '16px' }}>📭</div>
           <p>
             {searchQuery || selectedGrade > 0
               ? 'Không tìm thấy chương mục hoặc bài học nào phù hợp với bộ lọc hiện tại.'
@@ -558,7 +549,7 @@ function CourseManagement() {
             </button>
           ) : (
             <button type="button" className="btn-primary" onClick={handleOpenCreateTopic}>
-              ➕ Tạo chương mục đầu tiên
+              Tạo chương mục đầu tiên
             </button>
           )}
         </div>
@@ -573,8 +564,8 @@ function CourseManagement() {
                 {/* Header của Topic */}
                 <div className="topic-header" onClick={() => toggleExpand(topic.id)}>
                   <div className="topic-title-area">
-                    <span className={`expand-chevron ${isExpanded ? 'expanded' : ''}`}>▶</span>
-                    <span className={`grade-badge g${topic.gradeLevel}`}>Lớp {topic.gradeLevel}</span>
+                    <span className={`expand-chevron ${isExpanded ? 'expanded' : ''}`}>›</span>
+                    <span className="grade-badge">Lớp {topic.gradeLevel}</span>
                     <div className="topic-name-wrap">
                       <div className="topic-name">{topic.name}</div>
                       {topic.description && <div className="topic-desc">{topic.description}</div>}
@@ -586,29 +577,29 @@ function CourseManagement() {
 
                     <button
                       type="button"
-                      className="btn-action-icon add-lesson"
+                      className="btn-action-text add-lesson"
                       title="Thêm bài học vào chương này"
                       onClick={(e) => handleOpenCreateLesson(topic, e)}
                     >
-                      ➕ Thêm bài
+                      Thêm bài
                     </button>
 
                     <button
                       type="button"
-                      className="btn-action-icon edit"
+                      className="btn-action-text"
                       title="Sửa chương mục"
                       onClick={(e) => handleOpenEditTopic(topic, e)}
                     >
-                      ✏️
+                      Sửa
                     </button>
 
                     <button
                       type="button"
-                      className="btn-action-icon delete"
+                      className="btn-action-text delete"
                       title="Xóa chương mục"
                       onClick={(e) => handleOpenDeleteTopic(topic, e)}
                     >
-                      🗑️
+                      Xóa
                     </button>
                   </div>
                 </div>
@@ -625,13 +616,13 @@ function CourseManagement() {
                           style={{
                             background: 'none',
                             border: 'none',
-                            color: '#00bcd4',
+                            color: '#2563eb',
                             fontWeight: 600,
                             cursor: 'pointer',
                             textDecoration: 'underline',
                           }}
                         >
-                          + Thêm bài học đầu tiên ngay
+                          Thêm bài học đầu tiên
                         </button>
                       </div>
                     ) : (
@@ -643,16 +634,7 @@ function CourseManagement() {
                                 {lesson.orderIndex}
                               </span>
                               <span className="lesson-title">{lesson.title}</span>
-                              <span
-                                style={{
-                                  fontSize: '12px',
-                                  background: '#eff6ff',
-                                  color: '#0284c7',
-                                  padding: '2px 8px',
-                                  borderRadius: '12px',
-                                  fontWeight: 600,
-                                }}
-                              >
+                              <span className="lesson-q-count">
                                 {questionCountByLesson[lesson.id] || 0} câu hỏi
                               </span>
                             </div>
@@ -660,28 +642,27 @@ function CourseManagement() {
                             <div className="lesson-actions">
                               <button
                                 type="button"
-                                className="btn-action-icon"
-                                style={{ color: '#0284c7', background: '#e0f2fe', fontSize: '12px' }}
+                                className="btn-action-text"
                                 title="Chuyển sang Ngân hàng câu hỏi của bài này"
                                 onClick={() => navigate(`/admin/questions?lessonId=${lesson.id}`)}
                               >
-                                📝 Xem câu hỏi
+                                Xem câu hỏi
                               </button>
                               <button
                                 type="button"
-                                className="btn-action-icon edit"
+                                className="btn-action-text"
                                 title="Sửa bài học"
                                 onClick={(e) => handleOpenEditLesson(lesson, topic.name, e)}
                               >
-                                ✏️
+                                Sửa
                               </button>
                               <button
                                 type="button"
-                                className="btn-action-icon delete"
+                                className="btn-action-text delete"
                                 title="Xóa bài học"
                                 onClick={(e) => handleOpenDeleteLesson(lesson, e)}
                               >
-                                🗑️
+                                Xóa
                               </button>
                             </div>
                           </div>
@@ -702,7 +683,7 @@ function CourseManagement() {
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <form onSubmit={handleSaveTopic}>
               <div className="modal-header">
-                <h3>{topicModal.mode === 'create' ? '➕ Thêm Chương mục Mới' : '✏️ Cập nhật Chương mục'}</h3>
+                <h3>{topicModal.mode === 'create' ? 'Thêm Chương mục' : 'Cập nhật Chương mục'}</h3>
                 <button
                   type="button"
                   className="btn-close-modal"
@@ -777,7 +758,7 @@ function CourseManagement() {
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <form onSubmit={handleSaveLesson}>
               <div className="modal-header">
-                <h3>{lessonModal.mode === 'create' ? '➕ Thêm Bài học Mới' : '✏️ Cập nhật Bài học'}</h3>
+                <h3>{lessonModal.mode === 'create' ? 'Thêm Bài học' : 'Cập nhật Bài học'}</h3>
                 <button
                   type="button"
                   className="btn-close-modal"
@@ -794,13 +775,13 @@ function CourseManagement() {
                     style={{
                       padding: '10px 14px',
                       background: '#f1f5f9',
-                      borderRadius: '10px',
-                      fontSize: '14px',
+                      borderRadius: '8px',
+                      fontSize: '13.5px',
                       fontWeight: 600,
                       color: '#334155',
                     }}
                   >
-                    📂 {lessonModal.topicName}
+                    {lessonModal.topicName}
                   </div>
                 </div>
 
@@ -855,7 +836,7 @@ function CourseManagement() {
         <div className="modal-overlay" onClick={() => setDeleteModal((prev) => ({ ...prev, isOpen: false }))}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h3>⚠️ Xác nhận xóa</h3>
+              <h3>Xác nhận xóa</h3>
               <button
                 type="button"
                 className="btn-close-modal"
@@ -866,7 +847,7 @@ function CourseManagement() {
             </div>
 
             <div className="modal-body">
-              <p style={{ margin: 0, fontSize: '15px', color: '#334155', lineHeight: 1.6 }}>
+              <p style={{ margin: 0, fontSize: '14px', color: '#334155', lineHeight: 1.6 }}>
                 Bạn có chắc chắn muốn xóa {deleteModal.type === 'topic' ? 'chương mục' : 'bài học'}:{' '}
                 <strong style={{ color: '#0f172a' }}>"{deleteModal.name}"</strong>?
               </p>
@@ -876,16 +857,16 @@ function CourseManagement() {
                   style={{
                     background: '#fef2f2',
                     border: '1px solid #fecaca',
-                    padding: '12px 16px',
-                    borderRadius: '10px',
+                    padding: '12px 14px',
+                    borderRadius: '8px',
                     color: '#991b1b',
                     fontSize: '13px',
                     lineHeight: 1.5,
                   }}
                 >
-                  <strong>Lưu ý quan trọng:</strong> Chương mục này hiện đang chứa{' '}
+                  <strong>Lưu ý:</strong> Chương mục này hiện chứa{' '}
                   <strong>{deleteModal.childLessonCount} bài học</strong> và{' '}
-                  <strong>{deleteModal.childQuestionCount} câu hỏi</strong>. Theo chính sách hệ thống, việc xóa chương mục này sẽ tự động xóa toàn bộ các bài học và các câu hỏi liên quan bên trong để tránh dữ liệu mồ côi.
+                  <strong>{deleteModal.childQuestionCount} câu hỏi</strong>. Việc xóa chương mục sẽ đồng thời xóa các bài học và câu hỏi liên quan bên trong.
                 </div>
               )}
 
@@ -894,15 +875,15 @@ function CourseManagement() {
                   style={{
                     background: '#fef2f2',
                     border: '1px solid #fecaca',
-                    padding: '12px 16px',
-                    borderRadius: '10px',
+                    padding: '12px 14px',
+                    borderRadius: '8px',
                     color: '#991b1b',
                     fontSize: '13px',
                     lineHeight: 1.5,
                   }}
                 >
-                  <strong>Lưu ý quan trọng:</strong> Bài học này hiện đang chứa{' '}
-                  <strong>{deleteModal.childQuestionCount} câu hỏi</strong>. Khi xóa bài học này, tất cả các câu hỏi thuộc bài học sẽ được tự động xóa khỏi ngân hàng dữ liệu.
+                  <strong>Lưu ý:</strong> Bài học này hiện chứa{' '}
+                  <strong>{deleteModal.childQuestionCount} câu hỏi</strong>. Khi xóa, tất cả câu hỏi thuộc bài học này sẽ được xóa khỏi ngân hàng câu hỏi.
                 </div>
               )}
             </div>
@@ -932,7 +913,6 @@ function CourseManagement() {
       {/* 8. Toast Thông báo */}
       {toast.show && (
         <div className={`mgmt-toast ${toast.type}`}>
-          <span>{toast.type === 'success' ? '✅' : '❌'}</span>
           <span>{toast.message}</span>
         </div>
       )}

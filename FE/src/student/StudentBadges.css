@@ -1,0 +1,305 @@
+/* StudentBadges.css */
+
+.student-badges-page {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* Header Card */
+.badges-header-card {
+  background: linear-gradient(135deg, #b45309, #d97706 60%, #f59e0b);
+  border-radius: 16px;
+  padding: 32px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  box-shadow: 0 4px 16px rgba(217, 119, 6, 0.2);
+}
+
+.badges-header-info {
+  max-width: 620px;
+}
+
+.badges-tag {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.badges-title {
+  font-size: 26px;
+  font-weight: 800;
+  margin: 0 0 10px;
+}
+
+.badges-desc {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #fef3c7;
+  margin: 0;
+}
+
+.badges-header-stats {
+  display: flex;
+  gap: 14px;
+}
+
+.badge-stat-box {
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 16px 20px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 110px;
+}
+
+.badge-stat-val {
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.badge-stat-lbl {
+  font-size: 11px;
+  color: #fde68a;
+  text-transform: uppercase;
+}
+
+/* Badges Grid */
+.badges-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.badge-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  gap: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+}
+
+.badge-card-unlocked {
+  border-color: #fde68a;
+  background: linear-gradient(135deg, #ffffff, #fffbeb);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.1);
+}
+
+.badge-card-locked {
+  background-color: #f8fafc;
+  opacity: 0.85;
+}
+
+.badge-icon-bubble {
+  width: 72px;
+  height: 72px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.badge-card-unlocked .badge-icon-bubble {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  border: 2px solid #f59e0b;
+}
+
+.badge-card-locked .badge-icon-bubble {
+  background-color: #e2e8f0;
+  border: 2px solid #cbd5e1;
+}
+
+.badge-icon-symbol {
+  font-size: 32px;
+  color: #b45309;
+}
+
+.badge-card-locked .badge-icon-symbol {
+  color: #94a3b8;
+}
+
+.badge-lock-tag {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  font-size: 14px;
+}
+
+.badge-info-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.badge-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.badge-reward-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #b45309;
+  text-transform: uppercase;
+}
+
+.badge-card-locked .badge-reward-title {
+  color: #64748b;
+}
+
+.badge-status-pill {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.status-unlocked {
+  background-color: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+}
+
+.status-locked {
+  background-color: #f1f5f9;
+  color: #64748b;
+}
+
+.badge-name {
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 6px;
+}
+
+.badge-desc {
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.5;
+  margin: 0 0 14px;
+}
+
+/* Progress */
+.badge-progress-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: auto;
+}
+
+.badge-progress-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.badge-progress-bg {
+  height: 8px;
+  background-color: #e2e8f0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.badge-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #f59e0b, #d97706);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.points-needed-hint {
+  font-size: 11px;
+  color: #b45309;
+  font-weight: 600;
+}
+
+.badge-achieved-note {
+  margin-top: auto;
+  font-size: 12px;
+  font-weight: 700;
+  color: #047857;
+}
+
+/* CTA Card */
+.badges-cta-card {
+  background: linear-gradient(135deg, #1e3a8a, #2563eb);
+  border-radius: 16px;
+  padding: 28px 32px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.cta-content {
+  max-width: 600px;
+}
+
+.cta-title {
+  font-size: 18px;
+  font-weight: 800;
+  margin: 0 0 6px;
+}
+
+.cta-desc {
+  font-size: 14px;
+  color: #dbeafe;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.btn-cta-roadmap {
+  background-color: #ffffff;
+  color: #1d4ed8;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 12px 24px;
+  border-radius: 10px;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.btn-cta-roadmap:hover {
+  background-color: #eff6ff;
+  transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .badges-header-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .badges-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .badges-cta-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

@@ -260,9 +260,7 @@ function AutoTestGenerator() {
       {/* 1. Header Trang */}
       <div className="autotest-top-header">
         <div className="autotest-top-title">
-          <h1>
-            <span>⚙️</span> Sinh Đề Tự Động
-          </h1>
+          <h1>Sinh Đề Tự Động</h1>
           <p>
             Cấu hình tỷ lệ câu hỏi ngẫu nhiên theo độ khó, rà soát đề thi và phát hành trực tiếp cho học sinh.
           </p>
@@ -277,7 +275,6 @@ function AutoTestGenerator() {
         <div className="config-column">
           <div className="config-card">
             <div className="card-header-bar">
-              <div className="card-header-icon">🎛️</div>
               <div>
                 <h2 className="card-header-title">Cấu hình Sinh đề</h2>
                 <span className="card-header-sub">Thiết lập nguồn bài học & cơ cấu độ khó</span>
@@ -338,18 +335,18 @@ function AutoTestGenerator() {
               {selectedLessonId && (
                 <div className="inventory-card">
                   <div className="inventory-header">
-                    <span className="inventory-title">📦 Kho câu hỏi của bài học này:</span>
+                    <span className="inventory-title">Kho câu hỏi của bài học này:</span>
                     <span className="inventory-total">{inventoryStats.total} câu</span>
                   </div>
                   <div className="inventory-chips">
                     <span className="inv-badge easy" title="Số câu dễ có trong ngân hàng">
-                      🌱 Dễ: <strong>{inventoryStats.easy}</strong>
+                      Dễ: <strong>{inventoryStats.easy}</strong>
                     </span>
                     <span className="inv-badge medium" title="Số câu trung bình có trong ngân hàng">
-                      ⚖️ Trung bình: <strong>{inventoryStats.medium}</strong>
+                      Trung bình: <strong>{inventoryStats.medium}</strong>
                     </span>
                     <span className="inv-badge hard" title="Số câu khó có trong ngân hàng">
-                      🔥 Khó: <strong>{inventoryStats.hard}</strong>
+                      Khó: <strong>{inventoryStats.hard}</strong>
                     </span>
                   </div>
                 </div>
@@ -362,7 +359,7 @@ function AutoTestGenerator() {
                 {/* Câu Dễ */}
                 <div className={`count-row ${isOverEasy ? 'has-error' : ''}`}>
                   <div className="count-info">
-                    <span className="diff-pill easy">🌱 Dễ</span>
+                    <span className="diff-pill easy">Dễ</span>
                     <span className="count-sub">Khả dụng: {inventoryStats.easy} câu</span>
                   </div>
                   <div className="count-control">
@@ -397,7 +394,7 @@ function AutoTestGenerator() {
                 {/* Câu Trung bình */}
                 <div className={`count-row ${isOverMedium ? 'has-error' : ''}`}>
                   <div className="count-info">
-                    <span className="diff-pill medium">⚖️ Trung bình</span>
+                    <span className="diff-pill medium">Trung bình</span>
                     <span className="count-sub">Khả dụng: {inventoryStats.medium} câu</span>
                   </div>
                   <div className="count-control">
@@ -432,7 +429,7 @@ function AutoTestGenerator() {
                 {/* Câu Khó */}
                 <div className={`count-row ${isOverHard ? 'has-error' : ''}`}>
                   <div className="count-info">
-                    <span className="diff-pill hard">🔥 Khó</span>
+                    <span className="diff-pill hard">Khó</span>
                     <span className="count-sub">Khả dụng: {inventoryStats.hard} câu</span>
                   </div>
                   <div className="count-control">
@@ -467,7 +464,7 @@ function AutoTestGenerator() {
                 {/* Cảnh báo thiếu hụt số lượng */}
                 {hasInventoryWarning && (
                   <div className="alert-warning-box">
-                    ⚠️ <strong>Cảnh báo:</strong> Ngân hàng câu hỏi của bài học này không đủ số lượng theo yêu cầu. Hãy giảm số lượng hoặc bổ sung câu hỏi vào ngân hàng.
+                    <strong>Lưu ý:</strong> Ngân hàng câu hỏi của bài học này không đủ số lượng theo yêu cầu. Hãy giảm số lượng hoặc bổ sung câu hỏi vào ngân hàng.
                   </div>
                 )}
 
@@ -478,7 +475,7 @@ function AutoTestGenerator() {
                 </div>
               </div>
 
-              {/* Nút "✨ Sinh đề ngẫu nhiên" */}
+              {/* Nút Sinh đề ngẫu nhiên */}
               <button
                 type="submit"
                 className="btn-generate-random"
@@ -489,9 +486,7 @@ function AutoTestGenerator() {
                     <span className="spinner-dot"></span> Đang bốc ngẫu nhiên...
                   </>
                 ) : (
-                  <>
-                    <span>✨</span> Sinh đề ngẫu nhiên
-                  </>
+                  'Sinh đề ngẫu nhiên'
                 )}
               </button>
             </form>
@@ -510,13 +505,13 @@ function AutoTestGenerator() {
               <div className="preview-header">
                 <div className="preview-header-main">
                   <div className="preview-badge-row">
-                    <span className="badge-preview-tag">👁️ Xem trước Đề thi</span>
+                    <span className="badge-preview-tag">Xem trước đề thi</span>
                     <span className="badge-total-questions">
-                      🎯 Tổng số: <strong>{generatedQuestions.length} câu hỏi</strong>
+                      Tổng số: <strong>{generatedQuestions.length} câu hỏi</strong>
                     </span>
                   </div>
                   <h3 className="preview-lesson-title">
-                    📖 {generatedMeta?.lessonTitle || 'Đề thi tự động'}
+                    {generatedMeta?.lessonTitle || 'Đề thi tự động'}
                   </h3>
                   <div className="preview-meta-info">
                     <span>Khóa học: <strong>{generatedMeta?.topicName || 'Toán học'}</strong></span>
@@ -527,16 +522,16 @@ function AutoTestGenerator() {
 
                 {/* Tóm tắt phân bổ độ khó */}
                 <div className="preview-diff-distribution">
-                  <span className="dist-chip easy">🌱 {generatedMeta?.easy} Dễ</span>
-                  <span className="dist-chip medium">⚖️ {generatedMeta?.medium} Trung bình</span>
-                  <span className="dist-chip hard">🔥 {generatedMeta?.hard} Khó</span>
+                  <span className="dist-chip easy">{generatedMeta?.easy} Dễ</span>
+                  <span className="dist-chip medium">{generatedMeta?.medium} Trung bình</span>
+                  <span className="dist-chip hard">{generatedMeta?.hard} Khó</span>
                 </div>
               </div>
 
               {/* Danh sách Câu hỏi (Chỉ đọc - Read-only) */}
               <div className="preview-questions-scroll">
                 <div className="readonly-banner">
-                  🛡️ <strong>Chế độ rà soát (Chỉ đọc):</strong> Admin vui lòng đối chiếu nội dung, phân loại và đáp án đúng trước khi chuyển giao cho học sinh.
+                  <strong>Chế độ rà soát (Chỉ đọc):</strong> Admin vui lòng đối chiếu nội dung, phân loại và đáp án đúng trước khi chuyển giao cho học sinh.
                 </div>
 
                 <div className="preview-question-list">
@@ -553,9 +548,9 @@ function AutoTestGenerator() {
                           <div className="q-header-tags">
                             {/* Tag Loại câu hỏi */}
                             {isMultipleChoice ? (
-                              <span className="tag-qtype choice">🔘 Trắc nghiệm</span>
+                              <span className="tag-qtype choice">Trắc nghiệm</span>
                             ) : (
-                              <span className="tag-qtype fill">✍️ Điền đáp án</span>
+                              <span className="tag-qtype fill">Điền đáp án</span>
                             )}
 
                             {/* Tag Độ khó */}
@@ -568,9 +563,6 @@ function AutoTestGenerator() {
                                   : 'hard'
                               }`}
                             >
-                              {q.difficultyLevel === 'Dễ' && '🌱 '}
-                              {q.difficultyLevel === 'Trung bình' && '⚖️ '}
-                              {q.difficultyLevel === 'Khó' && '🔥 '}
                               {q.difficultyLevel}
                             </span>
                           </div>
@@ -627,7 +619,7 @@ function AutoTestGenerator() {
 
                         {/* Đáp án đúng (Hiển thị rõ cho Admin rà soát, tuyệt đối không có input làm bài) */}
                         <div className="q-item-correct-box">
-                          <span className="correct-title">✅ Đáp án đúng:</span>
+                          <span className="correct-title">Đáp án đúng:</span>
                           <span className="correct-answer-text">{q.correctAnswer}</span>
                         </div>
                       </div>
@@ -636,7 +628,7 @@ function AutoTestGenerator() {
                 </div>
               </div>
 
-              {/* Footer (Sticky): Nằm cố định dưới cùng, chứa nút "🚀 Gửi đề bài cho Học sinh" */}
+              {/* Footer (Sticky): Nằm cố định dưới cùng, chứa nút "Gửi đề bài cho Học sinh" */}
               <div className="preview-sticky-footer">
                 <div className="footer-left-meta">
                   <span className="footer-count">Đã rà soát: {generatedQuestions.length} câu</span>
@@ -648,17 +640,16 @@ function AutoTestGenerator() {
                   onClick={handlePublishTest}
                   disabled={isPublishing}
                 >
-                  {isPublishing ? '⏳ Đang phát hành...' : '🚀 Gửi đề bài cho Học sinh'}
+                  {isPublishing ? 'Đang gửi đề bài...' : 'Gửi đề bài cho học sinh'}
                 </button>
               </div>
             </div>
           ) : (
-            /* TRƯỜNG HỢP: CHƯA BẤM SINH ĐỀ (Trạng thái chờ hướng dẫn thanh lịch) */
+            /* TRƯỜNG HỢP: CHƯA BẤM SINH ĐỀ */
             <div className="preview-empty-card">
-              <div className="empty-illustration">🎲</div>
               <h3 className="empty-title">Khu vực Xem trước & Phát hành Đề thi</h3>
               <p className="empty-desc">
-                Chọn chương mục, bài học và cơ cấu số lượng ở <strong>Cột Cấu hình bên trái</strong>, sau đó bấm nút <strong>"✨ Sinh đề ngẫu nhiên"</strong>.
+                Chọn chương mục, bài học và cơ cấu số lượng ở <strong>Cột Cấu hình bên trái</strong>, sau đó bấm nút <strong>"Sinh đề ngẫu nhiên"</strong>.
               </p>
               <div className="empty-steps-guide">
                 <div className="guide-step">
@@ -686,7 +677,6 @@ function AutoTestGenerator() {
       {/* 3. Toast Thông báo */}
       {toast.show && (
         <div className={`autotest-toast ${toast.type}`}>
-          <span className="toast-icon">{toast.type === 'success' ? '✅' : '❌'}</span>
           <span className="toast-text">{toast.message}</span>
         </div>
       )}

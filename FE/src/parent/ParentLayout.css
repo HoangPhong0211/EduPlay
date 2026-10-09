@@ -1,0 +1,297 @@
+/* ==========================================================================
+   ParentLayout.css - Master Layout for Parent Portal
+   Theme: Royal Blue (#2563eb) and Slate Neutrals
+   ========================================================================== */
+
+.parent-layout-container {
+  min-height: 100vh;
+  background-color: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  font-family: inherit;
+  color: #0f172a;
+}
+
+/* ==========================================================================
+   1. Topbar Navigation
+   ========================================================================== */
+.parent-topbar {
+  height: 64px;
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.topbar-brand-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-mobile-nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #334155;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 4px;
+}
+
+.parent-brand-logo {
+  font-size: 20px;
+  font-weight: 800;
+  color: #2563eb;
+  text-decoration: none;
+  letter-spacing: -0.5px;
+}
+
+.portal-badge {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #1d4ed8;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  padding: 2px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+/* Desktop Navigation */
+.parent-desktop-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.parent-nav-item {
+  color: #475569;
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+.parent-nav-item:hover {
+  color: #0f172a;
+  background: #f1f5f9;
+}
+
+.parent-nav-item.active {
+  color: #2563eb;
+  font-weight: 600;
+  background: #eff6ff;
+}
+
+/* User Profile & Actions */
+.topbar-user-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-info-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.25;
+}
+
+.user-role-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.user-username-val {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.btn-topbar-link {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #475569;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  transition: all 0.15s ease;
+}
+
+.btn-topbar-link:hover {
+  background: #f8fafc;
+  color: #0f172a;
+  border-color: #94a3b8;
+}
+
+.btn-topbar-logout {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #dc2626;
+  background: #ffffff;
+  border: 1px solid #fecaca;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-topbar-logout:hover {
+  background: #fef2f2;
+  border-color: #f87171;
+}
+
+/* ==========================================================================
+   2. Mobile Drawer Navigation
+   ========================================================================== */
+.mobile-nav-drawer {
+  position: fixed;
+  inset: 0;
+  background: #ffffff;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 20px;
+  gap: 16px;
+  animation: slideDrawer 0.18s ease-out;
+}
+
+@keyframes slideDrawer {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.mobile-drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 12px;
+}
+
+.drawer-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.btn-close-drawer {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 5px;
+  width: 28px;
+  height: 28px;
+  font-size: 14px;
+  color: #64748b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-drawer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mobile-nav-link {
+  font-size: 14px;
+  font-weight: 500;
+  color: #334155;
+  text-decoration: none;
+  padding: 10px 14px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+
+.mobile-nav-link:hover {
+  background: #f8fafc;
+}
+
+.mobile-nav-link.active {
+  background: #eff6ff;
+  color: #2563eb;
+  font-weight: 600;
+}
+
+.mobile-drawer-actions {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 14px;
+}
+
+.mobile-action-link {
+  text-align: center;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #334155;
+  text-decoration: none;
+  padding: 9px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+}
+
+.mobile-action-logout {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #dc2626;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  padding: 9px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   3. Main Content
+   ========================================================================== */
+.parent-main-content {
+  flex: 1;
+  padding: 24px;
+  max-width: 1240px;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.parent-content-wrapper {
+  width: 100%;
+}
+
+/* Responsive */
+@media (max-width: 820px) {
+  .parent-topbar {
+    padding: 0 16px;
+  }
+  .btn-mobile-nav-toggle {
+    display: inline-block;
+  }
+  .parent-desktop-nav {
+    display: none;
+  }
+  .parent-main-content {
+    padding: 16px;
+  }
+  .user-info-text {
+    display: none;
+  }
+}

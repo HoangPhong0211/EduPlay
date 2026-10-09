@@ -491,17 +491,15 @@ function QuestionBank() {
       {/* 1. Header Section */}
       <div className="qbank-header">
         <div className="qbank-header-info">
-          <h1>
-            <span>📝</span> Ngân hàng Câu hỏi
-          </h1>
+          <h1>Ngân hàng Câu hỏi</h1>
           <p>Nhập liệu bán tự động qua file Excel, quản lý kho câu hỏi và tối ưu hóa gợi ý bằng AI.</p>
         </div>
         <div className="qbank-header-actions">
           <button type="button" className="btn-secondary" onClick={() => loadData(true)} title="Làm mới dữ liệu">
-            🔄 Làm mới
+            Làm mới
           </button>
           <button type="button" className="btn-primary" onClick={handleOpenUpload} title="Tải file Excel để nhập hàng loạt câu hỏi">
-            📥 Thêm câu hỏi (Excel)
+            Thêm câu hỏi (Excel)
           </button>
         </div>
       </div>
@@ -509,31 +507,27 @@ function QuestionBank() {
       {/* 2. Thống kê nhanh */}
       <div className="qbank-stats-grid">
         <div className="qbank-stat-card">
-          <div className="qbank-stat-icon blue">📚</div>
           <div className="qbank-stat-details">
-            <h3>{stats.total}</h3>
-            <span>Tổng số câu hỏi</span>
+            <span className="stat-label">Tổng số câu hỏi</span>
+            <h3 className="stat-value">{stats.total}</h3>
           </div>
         </div>
         <div className="qbank-stat-card">
-          <div className="qbank-stat-icon green">🌱</div>
           <div className="qbank-stat-details">
-            <h3>{stats.easy}</h3>
-            <span>Độ khó Dễ</span>
+            <span className="stat-label">Độ khó Dễ</span>
+            <h3 className="stat-value">{stats.easy}</h3>
           </div>
         </div>
         <div className="qbank-stat-card">
-          <div className="qbank-stat-icon amber">⚖️</div>
           <div className="qbank-stat-details">
-            <h3>{stats.medium}</h3>
-            <span>Độ khó Trung bình</span>
+            <span className="stat-label">Độ khó Trung bình</span>
+            <h3 className="stat-value">{stats.medium}</h3>
           </div>
         </div>
         <div className="qbank-stat-card">
-          <div className="qbank-stat-icon purple">🔥</div>
           <div className="qbank-stat-details">
-            <h3>{stats.hard}</h3>
-            <span>Độ khó Khó</span>
+            <span className="stat-label">Độ khó Khó</span>
+            <h3 className="stat-value">{stats.hard}</h3>
           </div>
         </div>
       </div>
@@ -597,15 +591,14 @@ function QuestionBank() {
             onChange={(e) => setSelectedQuestionType(e.target.value)}
           >
             <option value="">Tất cả loại ({stats.total})</option>
-            <option value="Trắc nghiệm">🔘 Trắc nghiệm ({stats.choice})</option>
-            <option value="Điền đáp án">✍️ Điền đáp án ({stats.fill})</option>
+            <option value="Trắc nghiệm">Trắc nghiệm ({stats.choice})</option>
+            <option value="Điền đáp án">Điền đáp án ({stats.fill})</option>
           </select>
         </div>
 
         <div className="search-wrap">
           <label htmlFor="q-search">Tìm kiếm:</label>
           <div className="search-input-box">
-            <span className="search-icon">🔍</span>
             <input
               id="q-search"
               type="text"
@@ -629,13 +622,11 @@ function QuestionBank() {
 
       {/* 4. Danh sách câu hỏi (Data Table) */}
       {isLoading ? (
-        <div style={{ textAlign: 'center', padding: '60px 20px', background: '#fff', borderRadius: '16px' }}>
-          <div style={{ fontSize: '32px', marginBottom: '12px' }}>⏳</div>
+        <div style={{ textAlign: 'center', padding: '60px 20px', background: '#fff', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
           <div style={{ fontWeight: 600, color: '#475569' }}>Đang tải danh sách câu hỏi...</div>
         </div>
       ) : filteredQuestions.length === 0 ? (
         <div className="empty-qbank-card">
-          <div style={{ fontSize: '48px', marginBottom: '16px' }}>📭</div>
           <p>
             {searchQuery || selectedTopicId || selectedLessonId || selectedDifficulty
               ? 'Không tìm thấy câu hỏi nào phù hợp với bộ lọc hiện tại.'
@@ -657,7 +648,7 @@ function QuestionBank() {
             </button>
           ) : (
             <button type="button" className="btn-primary" onClick={handleOpenUpload}>
-              📥 Tải file Excel đầu tiên
+              Thêm câu hỏi đầu tiên
             </button>
           )}
         </div>
@@ -667,12 +658,12 @@ function QuestionBank() {
             <thead>
               <tr>
                 <th style={{ width: '60px' }}>ID</th>
-                <th>Nội dung bài toán & Phương án</th>
+                <th>Nội dung câu hỏi & Phương án</th>
                 <th style={{ width: '130px' }}>Loại câu</th>
-                <th style={{ width: '260px' }}>Gợi ý (AI Hint)</th>
+                <th style={{ width: '260px' }}>Gợi ý AI</th>
                 <th style={{ width: '100px' }}>Độ khó</th>
-                <th style={{ width: '130px' }}>Đáp án đúng</th>
-                <th style={{ width: '90px', textAlign: 'center' }}>Thao tác</th>
+                <th style={{ width: '130px' }}>Đáp án</th>
+                <th style={{ width: '110px', textAlign: 'center' }}>Thao tác</th>
               </tr>
             </thead>
             <tbody>
@@ -733,25 +724,22 @@ function QuestionBank() {
                         )}
                         {parentLesson && (
                           <div className="q-lesson-badge">
-                            📖 {parentLesson.title}
+                            {parentLesson.title}
                             {parentTopic && ` • Lớp ${parentTopic.gradeLevel}`}
                           </div>
                         )}
                       </div>
                     </td>
                     <td>
-                      {isChoice ? (
-                        <span className="qtype-badge choice">🔘 Trắc nghiệm</span>
-                      ) : (
-                        <span className="qtype-badge fill">✍️ Điền đáp án</span>
-                      )}
+                      <span className="qtype-badge">
+                        {isChoice ? 'Trắc nghiệm' : 'Điền đáp án'}
+                      </span>
                     </td>
                     <td>
-                      {/* Vị trí mới cho Gợi ý & Nút ✨ Gọi AI */}
                       {hasHint ? (
                         <div className="table-hint-cell">
                           <div className="table-hint-text" title={q.hint}>
-                            💡 {q.hint}
+                            {q.hint}
                           </div>
                           <button
                             type="button"
@@ -759,7 +747,7 @@ function QuestionBank() {
                             onClick={() => handleOpenAiModal(q)}
                             title="Bấm để xem và cập nhật gợi ý AI"
                           >
-                            ✏️ Đổi gợi ý
+                            Đổi gợi ý
                           </button>
                         </div>
                       ) : (
@@ -769,20 +757,12 @@ function QuestionBank() {
                           onClick={() => handleOpenAiModal(q)}
                           title="Lấy nội dung bài toán này gửi đến AI để sinh gợi ý hướng dẫn sửa sai"
                         >
-                          ✨ Gọi AI
+                          Tạo gợi ý AI
                         </button>
                       )}
                     </td>
                     <td>
-                      <span
-                        className={`difficulty-badge ${
-                          q.difficultyLevel === 'Dễ'
-                            ? 'easy'
-                            : q.difficultyLevel === 'Trung bình'
-                            ? 'medium'
-                            : 'hard'
-                        }`}
-                      >
+                      <span className="difficulty-badge">
                         {q.difficultyLevel}
                       </span>
                     </td>
@@ -793,19 +773,19 @@ function QuestionBank() {
                       <div className="q-actions" style={{ justifyContent: 'center' }}>
                         <button
                           type="button"
-                          className="btn-icon edit"
+                          className="btn-action-text"
                           title="Sửa câu hỏi"
                           onClick={() => handleOpenEdit(q)}
                         >
-                          ✏️
+                          Sửa
                         </button>
                         <button
                           type="button"
-                          className="btn-icon delete"
+                          className="btn-action-text delete"
                           title="Xóa câu hỏi"
                           onClick={() => handleOpenDelete(q)}
                         >
-                          🗑️
+                          Xóa
                         </button>
                       </div>
                     </td>
@@ -823,10 +803,7 @@ function QuestionBank() {
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <form onSubmit={handleUploadExcel}>
               <div className="modal-header">
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{ fontSize: '20px' }}>📥</span>
-                  <h3 style={{ margin: 0 }}>Nhập liệu bán tự động qua file Excel</h3>
-                </div>
+                <h3>Nhập liệu câu hỏi qua file Excel</h3>
                 <button
                   type="button"
                   className="btn-close-modal"
@@ -891,7 +868,6 @@ function QuestionBank() {
                   <label>Tệp tin dữ liệu câu hỏi (.xlsx) *</label>
                   
                   {!uploadModal.file ? (
-                    // Khu vực Upload (Mới): Khung viền đứt nét (dashed border)
                     <div
                       className={`upload-dropzone ${uploadModal.isDragOver ? 'dragover' : ''}`}
                       onDragOver={(e) => {
@@ -920,17 +896,14 @@ function QuestionBank() {
                           }
                         }}
                       />
-                      <div className="upload-icon">☁️</div>
                       <div className="upload-title">Kéo thả file .xlsx vào đây hoặc bấm để chọn file</div>
                       <div className="upload-subtitle">
-                        Định dạng chuẩn 9 cột: <strong>Cột B</strong> (Nội dung) • <strong>Cột C</strong> (Loại câu) • <strong>Cột D</strong> (Độ khó) • <strong>Cột E</strong> (Đáp án) • <strong>Cột F, G, H, I</strong> (Phương án A, B, C, D).
+                        Định dạng 9 cột: Cột B (Nội dung), Cột C (Loại câu: Trắc nghiệm / Điền đáp án), Cột D (Độ khó), Cột E (Đáp án đúng), Cột F đến I (Phương án A, B, C, D).
                       </div>
                     </div>
                   ) : (
-                    // Trạng thái file (Mới): Khung chuyển thành thanh ngang hiển thị tên file, dung lượng và nút (X)
                     <div className="upload-file-status">
                       <div className="file-info-group">
-                        <span className="file-icon">📊</span>
                         <div className="file-details">
                           <div className="file-name">{uploadModal.file.name}</div>
                           <div className="file-size">{formatFileSize(uploadModal.file.size)} • Sẵn sàng tải lên</div>
@@ -953,22 +926,22 @@ function QuestionBank() {
 
                 <div className="upload-guideline-box">
                   <p>
-                    💡 <strong>Cấu trúc file Excel mới (Hỗ trợ Trắc nghiệm & Điền đáp án):</strong>
+                    <strong>Cấu trúc file Excel (Hỗ trợ Trắc nghiệm & Điền đáp án):</strong>
                   </p>
                   <ul className="guideline-columns-list">
                     <li><strong>Cột B (Cell 2):</strong> Nội dung câu hỏi (Content)</li>
                     <li><strong>Cột C (Cell 3):</strong> Loại câu hỏi (<em>"Trắc nghiệm"</em> hoặc <em>"Điền đáp án"</em>)</li>
                     <li><strong>Cột D (Cell 4):</strong> Độ khó (<em>"Dễ"</em>, <em>"Trung bình"</em>, <em>"Khó"</em>)</li>
                     <li><strong>Cột E (Cell 5):</strong> Đáp án đúng (CorrectAnswer)</li>
-                    <li><strong>Cột F, G, H, I (Cell 6, 7, 8, 9):</strong> Lần lượt là Phương án A, B, C, D (cho câu hỏi Trắc nghiệm)</li>
+                    <li><strong>Cột F, G, H, I (Cell 6, 7, 8, 9):</strong> Phương án A, B, C, D (cho câu hỏi Trắc nghiệm)</li>
                     <li className="guideline-subtext">
-                      <em>* Cột A (Cell 1): ID bài học (tùy chọn; nếu để trống hệ thống sẽ tự động gán vào bài học được chọn ở trên). Phần gợi ý (Hint) sẽ để trống để sinh tự động qua AI.</em>
+                      <em>* Cột A (Cell 1): ID bài học (tùy chọn; nếu để trống hệ thống sẽ tự động gán vào bài học được chọn ở trên). Phần gợi ý (Hint) sẽ để trống để sinh qua AI.</em>
                     </li>
                   </ul>
                 </div>
               </div>
 
-              {/* 4. Nút hành động: "Tải dữ liệu lên" */}
+              {/* 4. Nút hành động */}
               <div className="modal-footer">
                 <button
                   type="button"
@@ -983,7 +956,7 @@ function QuestionBank() {
                   className="btn-primary"
                   disabled={!uploadModal.file || uploadModal.isUploading}
                 >
-                  {uploadModal.isUploading ? '⏳ Đang nạp dữ liệu...' : '🚀 Tải dữ liệu lên'}
+                  {uploadModal.isUploading ? 'Đang nạp dữ liệu...' : 'Tải dữ liệu lên'}
                 </button>
               </div>
             </form>
@@ -994,12 +967,11 @@ function QuestionBank() {
       {/* 6. MODAL: Đọc lướt & Chốt Gợi ý AI (AI Hint Review & Confirm) */}
       {aiModal.isOpen && (
         <div className="modal-overlay" onClick={() => setAiModal((prev) => ({ ...prev, isOpen: false }))}>
-          <div className="modal-content" style={{ maxWidth: '620px' }} onClick={(e) => e.stopPropagation()}>
+          <div className="modal-content" style={{ maxWidth: '600px' }} onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '20px' }}>✨</span>
                 <h3 style={{ margin: 0 }}>Gợi ý Sư phạm từ AI</h3>
-                <span className="badge-ai-pill">Hybrid AI</span>
+                <span className="badge-ai-pill">AI Gợi ý</span>
               </div>
               <button
                 type="button"
@@ -1013,7 +985,7 @@ function QuestionBank() {
             <div className="modal-body">
               {/* Nội dung câu hỏi context */}
               <div className="ai-question-callout">
-                <div className="ai-callout-label">Nội dung bài toán (#{aiModal.question?.id}):</div>
+                <div className="ai-callout-label">Nội dung câu hỏi (#{aiModal.question?.id}):</div>
                 <div className="ai-callout-text">{aiModal.question?.content}</div>
                 <div className="ai-callout-meta">
                   <span>Đáp án đúng: <strong>{aiModal.question?.correctAnswer}</strong></span>
@@ -1024,24 +996,24 @@ function QuestionBank() {
               {/* Khung soạn thảo/chốt gợi ý */}
               <div className="form-group">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                  <label htmlFor="ai-hint-textarea" style={{ margin: 0, fontWeight: 700, color: '#1e293b' }}>
+                  <label htmlFor="ai-hint-textarea" style={{ margin: 0, fontWeight: 600, color: '#1e293b' }}>
                     Hướng dẫn sửa sai do AI đề xuất:
                   </label>
                   <button
                     type="button"
-                    className="btn-regenerate-ai"
+                    className="btn-secondary"
+                    style={{ padding: '4px 10px', fontSize: '12px' }}
                     onClick={() => handleOpenAiModal(aiModal.question)}
                     disabled={aiModal.isLoading || aiModal.isSaving}
                     title="Yêu cầu AI sinh lại gợi ý khác"
                   >
-                    🔄 Sinh lại
+                    Sinh lại
                   </button>
                 </div>
 
                 {aiModal.isLoading ? (
                   <div className="ai-loading-box">
-                    <div className="ai-spinner">⏳</div>
-                    <p>AI đang phân tích bài toán và soạn thảo 3 câu gợi ý sư phạm phù hợp lứa tuổi...</p>
+                    <p>AI đang phân tích bài toán và soạn thảo gợi ý sư phạm phù hợp...</p>
                   </div>
                 ) : (
                   <textarea
@@ -1050,7 +1022,7 @@ function QuestionBank() {
                     className="ai-hint-input"
                     value={aiModal.hintText}
                     onChange={(e) => setAiModal((prev) => ({ ...prev, hintText: e.target.value }))}
-                    placeholder="Quản trị viên có thể đọc lướt qua và chỉnh sửa gợi ý tại đây trước khi chốt lưu..."
+                    placeholder="Quản trị viên có thể xem và chỉnh sửa gợi ý tại đây trước khi lưu..."
                   />
                 )}
               </div>
@@ -1071,7 +1043,7 @@ function QuestionBank() {
                 onClick={handleSaveAiHint}
                 disabled={aiModal.isLoading || aiModal.isSaving || !aiModal.hintText.trim()}
               >
-                {aiModal.isSaving ? '💾 Đang lưu...' : '💾 Lưu'}
+                {aiModal.isSaving ? 'Đang lưu...' : 'Lưu gợi ý'}
               </button>
             </div>
           </div>
@@ -1084,7 +1056,7 @@ function QuestionBank() {
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <form onSubmit={handleSaveEdit}>
               <div className="modal-header">
-                <h3>✏️ Cập nhật Câu hỏi #{editModal.id}</h3>
+                <h3>Cập nhật Câu hỏi #{editModal.id}</h3>
                 <button
                   type="button"
                   className="btn-close-modal"
@@ -1154,8 +1126,8 @@ function QuestionBank() {
                       }
                       required
                     >
-                      <option value="Trắc nghiệm">🔘 Trắc nghiệm</option>
-                      <option value="Điền đáp án">✍️ Điền đáp án (Tự luận ngắn)</option>
+                      <option value="Trắc nghiệm">Trắc nghiệm</option>
+                      <option value="Điền đáp án">Điền đáp án (Tự luận ngắn)</option>
                     </select>
                   </div>
 
@@ -1296,7 +1268,7 @@ function QuestionBank() {
         <div className="modal-overlay" onClick={() => setDeleteModal((prev) => ({ ...prev, isOpen: false }))}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h3>⚠️ Xác nhận xóa câu hỏi</h3>
+              <h3>Xác nhận xóa câu hỏi</h3>
               <button
                 type="button"
                 className="btn-close-modal"
@@ -1307,7 +1279,7 @@ function QuestionBank() {
             </div>
 
             <div className="modal-body">
-              <p style={{ margin: 0, fontSize: '15px', color: '#334155', lineHeight: 1.6 }}>
+              <p style={{ margin: 0, fontSize: '14px', color: '#334155', lineHeight: 1.6 }}>
                 Bạn có chắc chắn muốn xóa câu hỏi:{' '}
                 <strong style={{ color: '#0f172a' }}>"{deleteModal.content}"</strong>?
               </p>
@@ -1315,8 +1287,8 @@ function QuestionBank() {
                 style={{
                   background: '#fef2f2',
                   border: '1px solid #fecaca',
-                  padding: '12px 16px',
-                  borderRadius: '10px',
+                  padding: '12px 14px',
+                  borderRadius: '8px',
                   color: '#991b1b',
                   fontSize: '13px',
                   lineHeight: 1.5,
@@ -1352,7 +1324,6 @@ function QuestionBank() {
       {/* 9. Toast Thông báo */}
       {toast.show && (
         <div className={`mgmt-toast ${toast.type}`}>
-          <span>{toast.type === 'success' ? '✅' : '❌'}</span>
           <span>{toast.message}</span>
         </div>
       )}

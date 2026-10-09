@@ -118,11 +118,34 @@ namespace BE.Services
             var user = await _context.Users.SingleOrDefaultAsync(u => u.Username == dto.Username);
             if (user == null) return new BaseResponse { IsSuccess = false, Message = "Tài khoản không tồn tại." };
 
+            // Xác định email người nhận (Ưu tiên Email trong bảng Parents)
+            string recipientEmail = "";
             var parent = await _context.Parents.SingleOrDefaultAsync(p => p.UserId == user.Id);
-            if (parent == null || string.IsNullOrEmpty(parent.Email))
-                return new BaseResponse { IsSuccess = false, Message = "Tài khoản này chưa được liên kết Email." };
+            if (parent != null && !string.IsNullOrEmpty(parent.Email))
+            {
+                recipientEmail = parent.Email;
+            }
+            else
+            {
+                // Nếu là học sinh, lấy email của phụ huynh quản lý
+                var student = await _context.Students.SingleOrDefaultAsync(s => s.UserId == user.Id);
+                if (student != null)
+                {
+                    var studentParent = await _context.Parents.SingleOrDefaultAsync(p => p.UserId == student.ParentId);
+                    if (studentParent != null && !string.IsNullOrEmpty(studentParent.Email))
+                    {
+                        recipientEmail = studentParent.Email;
+                    }
+                }
+            }
 
-            // Sinh mã OTP 6 số an toàn hơn
+            // Môi trường cá nhân / Demo: Tự động gán email giả lập nếu tài khoản chưa nhập email
+            if (string.IsNullOrEmpty(recipientEmail))
+            {
+                recipientEmail = $"{user.Username.ToLower()}@gmail.com";
+            }
+
+            // Sinh mã OTP 6 số an toàn
             string otp = Random.Shared.Next(100000, 999999).ToString();
             user.OtpCode = otp;
             user.OtpExpiryTime = DateTime.UtcNow.AddMinutes(5);
@@ -130,15 +153,17 @@ namespace BE.Services
 
             // GIẢ LẬP GỬI EMAIL: In ra cửa sổ Terminal/Console để dễ kiểm tra
             Console.WriteLine($"\n========================================");
-            Console.WriteLine($"[GIẢ LẬP EMAIL] Người nhận: {parent.Email}");
+            Console.WriteLine($"[GIẢ LẬP EMAIL] Người nhận: {recipientEmail}");
+            Console.WriteLine($"[GIẢ LẬP EMAIL] Tiêu đề: [EduPlay] Mã OTP khôi phục mật khẩu");
             Console.WriteLine($"[GIẢ LẬP EMAIL] Mã OTP khôi phục mật khẩu là: {otp}");
+            Console.WriteLine($"[GIẢ LẬP EMAIL] Thời gian gửi: {DateTime.Now:dd/MM/yyyy HH:mm:ss}");
             Console.WriteLine($"========================================\n");
 
-            // Trả mã OTP về thẳng Frontend thông qua Message để tiện test và demo đồ án
+            // Trả thông tin email và mã OTP về Frontend để giả lập hiển thị giao diện hộp thư
             return new BaseResponse
             {
                 IsSuccess = true,
-                Message = $"[Chế độ Demo] Đã tạo mã OTP thành công. Mã OTP của bạn là: {otp}"
+                Message = $"[GIẢ LẬP EMAIL] Người nhận: {recipientEmail} | Mã OTP: {otp}"
             };
         }
 

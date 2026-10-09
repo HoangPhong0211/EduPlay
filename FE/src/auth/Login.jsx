@@ -8,7 +8,7 @@ import './Auth.css';
 // Trích xuất thông báo lỗi chính xác từ phản hồi Backend
 function extractErrorMessage(error) {
   if (!error.response) {
-    return 'Không thể kết nối đến máy chủ. Vui lòng kiểm tra lại Backend.';
+    return 'Không thể kết nối đến máy chủ (cổng 5271/5000). Vui lòng đảm bảo đã chạy "dotnet run" trong thư mục EduPlay\\BE.';
   }
   const data = error.response.data;
   if (typeof data === 'string') return data;
@@ -58,10 +58,14 @@ export default function Login() {
         // Lưu token và cập nhật trạng thái toàn cục trong AuthContext
         login(token);
         
-        // Điều hướng theo phân quyền: Admin vào /admin, vai trò khác về /
+        // Điều hướng theo phân quyền: Admin vào /admin, Parent vào /parent, Student vào /student
         const parsedUser = getUserFromToken(token);
         if (parsedUser?.role === 'Admin') {
           navigate('/admin');
+        } else if (parsedUser?.role === 'Parent') {
+          navigate('/parent');
+        } else if (parsedUser?.role === 'Student') {
+          navigate('/student');
         } else {
           navigate('/');
         }
@@ -109,6 +113,12 @@ export default function Login() {
               disabled={isLoading}
               required
             />
+          </div>
+
+          <div className="login-options-row">
+            <Link to="/forgot-password" className="forgot-password-link">
+              Quên mật khẩu?
+            </Link>
           </div>
 
           <button type="submit" className="btn-submit" disabled={isLoading}>

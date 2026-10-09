@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using BE.Services;
 using BE.DTOs;
@@ -79,6 +79,35 @@ namespace BE.Controllers
 
             var result = await _parentService.AssignTaskAsync(parentId, dto);
             if (!result.IsSuccess) return BadRequest(result);
+            return Ok(result);
+        }
+
+        [HttpGet("students")]
+        public async Task<IActionResult> GetMyStudents()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int parentId))
+                return Unauthorized("Không tìm thấy ID người dùng.");
+
+            var result = await _parentService.GetMyStudentsAsync(parentId);
+            return Ok(result);
+        }
+
+        [HttpGet("assignments")]
+        public async Task<IActionResult> GetMyAssignments()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int parentId))
+                return Unauthorized("Không tìm thấy ID người dùng.");
+
+            var result = await _parentService.GetMyAssignmentsAsync(parentId);
+            return Ok(result);
+        }
+
+        [HttpGet("lessons")]
+        public async Task<IActionResult> GetAvailableLessons()
+        {
+            var result = await _parentService.GetAvailableLessonsAsync();
             return Ok(result);
         }
     }

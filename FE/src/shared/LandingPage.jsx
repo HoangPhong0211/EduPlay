@@ -109,20 +109,39 @@ export default function LandingPage() {
 
               {user.role === 'Parent' && (
                 <Link
-                  to="/parent/create-student"
+                  to="/parent"
                   className="btn-create-child"
                   style={{
                     marginLeft: '10px',
-                    padding: '6px 12px',
-                    background: '#4dd0e1',
-                    borderRadius: '8px',
-                    color: '#004d40',
+                    padding: '6px 14px',
+                    background: '#2563eb',
+                    borderRadius: '6px',
+                    color: '#ffffff',
                     fontWeight: '600',
                     textDecoration: 'none',
                     fontSize: '13px'
                   }}
                 >
-                  + Tạo hồ sơ cho con
+                  Cổng Phụ Huynh
+                </Link>
+              )}
+
+              {user.role === 'Student' && (
+                <Link
+                  to="/student"
+                  className="btn-create-child"
+                  style={{
+                    marginLeft: '10px',
+                    padding: '6px 14px',
+                    background: '#10b981',
+                    borderRadius: '6px',
+                    color: '#ffffff',
+                    fontWeight: '700',
+                    textDecoration: 'none',
+                    fontSize: '13px'
+                  }}
+                >
+                  Góc Học Tập
                 </Link>
               )}
 
@@ -193,19 +212,71 @@ export default function LandingPage() {
                 LỚP 3
               </li>
             </ul>
+
+            {/* Lối tắt truy cập nhanh các tính năng của học sinh */}
+            <div style={{ padding: '16px 0 8px', borderTop: '1px solid #e2e8f0', marginTop: '14px' }}>
+              <h4 style={{ fontSize: '12px', color: '#64748b', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                Lối tắt học tập
+              </h4>
+              <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <li>
+                  <Link
+                    to="/student/dashboard"
+                    onClick={() => setIsMenuOpen(false)}
+                    style={{ textDecoration: 'none', color: '#00838f', fontWeight: '600', display: 'block', padding: '8px 12px', background: '#f8fafc', borderRadius: '8px' }}
+                  >
+                    🏠 Góc Học Tập
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/student/roadmap"
+                    onClick={() => setIsMenuOpen(false)}
+                    style={{ textDecoration: 'none', color: '#00838f', fontWeight: '600', display: 'block', padding: '8px 12px', background: '#f8fafc', borderRadius: '8px' }}
+                  >
+                    🗺️ Lộ trình chi tiết
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/student/badges"
+                    onClick={() => setIsMenuOpen(false)}
+                    style={{ textDecoration: 'none', color: '#00838f', fontWeight: '600', display: 'block', padding: '8px 12px', background: '#f8fafc', borderRadius: '8px' }}
+                  >
+                    🏆 Kho Huy hiệu
+                  </Link>
+                </li>
+              </ul>
+            </div>
           </aside>
         </>
       )}
 
-      {/* Thanh Menu ngang */}
+      {/* Thanh Menu ngang kết nối trực tiếp các phân hệ */}
       <nav className="main-nav">
         <ul>
-          <li>Giới thiệu</li>
-          <li>Lộ trình học</li>
-          <li>Luyện tập</li>
-          <li>Báo cáo năng lực</li>
-          <li>Huy hiệu</li>
-          <li>Hướng dẫn</li>
+          <li>
+            <Link to="/">Trang chủ</Link>
+          </li>
+          <li>
+            <Link to="/student/roadmap">Lộ trình học</Link>
+          </li>
+          <li>
+            <Link to="/student/roadmap">Luyện tập</Link>
+          </li>
+          <li>
+            <Link to={user?.role === 'Parent' ? '/parent/report' : user?.role === 'Student' ? '/student/dashboard' : '/login'}>
+              Báo cáo năng lực
+            </Link>
+          </li>
+          <li>
+            <Link to={user?.role === 'Student' ? '/student/assignments' : user?.role === 'Parent' ? '/parent/assignments' : '/login'}>
+              Nhiệm vụ học tập
+            </Link>
+          </li>
+          <li>
+            <Link to="/student/badges">Kho Huy hiệu</Link>
+          </li>
         </ul>
       </nav>
 
@@ -213,6 +284,11 @@ export default function LandingPage() {
       <div className="slogan-banner">
         <h2>HỌC TOÁN VUI NHỘN CÙNG EDUPLAY</h2>
         <p>Nền tảng học tập thông minh, cá nhân hóa cho học sinh tiểu học</p>
+        <div style={{ marginTop: '14px' }}>
+          <Link to="/student/roadmap" className="btn-hero-explore">
+            Khám phá Lộ trình học ngay →
+          </Link>
+        </div>
         {selectedGrade && (
           <div className="filter-tag">
             Đang lọc: <strong>Lớp {selectedGrade}</strong>
@@ -242,7 +318,12 @@ export default function LandingPage() {
                 <span className="course-grade-badge">Lớp {course.grade}</span>
                 <h4>{course.title}</h4>
                 <p>{course.desc}</p>
-                <button className="btn-start-learn">Bắt đầu học</button>
+                <Link
+                  to={`/student/roadmap?grade=${course.grade}`}
+                  className="btn-start-learn"
+                >
+                  Bắt đầu học →
+                </Link>
               </div>
             ))}
           </div>

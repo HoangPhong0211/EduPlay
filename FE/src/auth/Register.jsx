@@ -6,7 +6,7 @@ import './Auth.css';
 // Trích xuất thông báo lỗi chính xác từ response của Backend
 function extractErrorMessage(error) {
   if (!error.response) {
-    return 'Không thể kết nối đến máy chủ. Vui lòng kiểm tra lại Backend.';
+    return 'Không thể kết nối đến máy chủ (cổng 5271/5000). Vui lòng đảm bảo đã chạy "dotnet run" trong thư mục EduPlay\\BE.';
   }
   const data = error.response.data;
   if (typeof data === 'string') return data;

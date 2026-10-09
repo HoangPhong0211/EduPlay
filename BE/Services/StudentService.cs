@@ -1,4 +1,4 @@
-﻿using BE.Data;
+using BE.Data;
 using BE.Models;
 using BE.DTOs;
 using Microsoft.EntityFrameworkCore;
@@ -150,13 +150,14 @@ namespace BE.Services
             {
                 Nickname = student.Nickname,
                 TotalPoints = student.TotalPoints,
+                TimeLimitMinutes = student.TimeLimitMinutes,
                 EarnedBadges = badges
             };
 
             return new { IsSuccess = true, Data = dashboardData };
         }
 
-        // Thêm vào bên trong class StudentService
+        // Lấy lộ trình theo khối lớp
         public async Task<object> GetRoadmapAsync(int gradeLevel)
         {
             var roadmap = await _context.Topics
@@ -181,6 +182,70 @@ namespace BE.Services
                 .ToListAsync();
 
             return new { IsSuccess = true, TotalTopics = roadmap.Count, Data = roadmap };
+        }
+
+        // Lấy danh sách câu hỏi để học sinh luyện tập cho 1 bài học
+        public async Task<object> GetLessonQuestionsAsync(int lessonId)
+        {
+            var lesson = await _context.Lessons
+                .Include(l => l.Topic)
+                .FirstOrDefaultAsync(l => l.Id == lessonId);
+
+            if (lesson == null)
+                return new { IsSuccess = false, Message = "Không tìm thấy bài học!" };
+
+            var questions = await _context.Questions
+                .Where(q => q.LessonId == lessonId)
+                .Select(q => new
+                {
+                    q.Id,
+                    q.LessonId,
+                    q.Content,
+                    q.QuestionType,
+                    q.DifficultyLevel,
+                    q.OptionA,
+                    q.OptionB,
+                    q.OptionC,
+                    q.OptionD
+                })
+                .ToListAsync();
+
+            return new
+            {
+                IsSuccess = true,
+                Lesson = new
+                {
+                    lesson.Id,
+                    lesson.Title,
+                    TopicName = lesson.Topic != null ? lesson.Topic.Name : "",
+                    GradeLevel = lesson.Topic != null ? lesson.Topic.GradeLevel : 1
+                },
+                TotalQuestions = questions.Count,
+                Data = questions
+            };
+        }
+
+        // Lấy danh sách bài tập được phụ huynh giao cho học sinh
+        public async Task<object> GetMyAssignmentsAsync(int userId)
+        {
+            var student = await _context.Students.SingleOrDefaultAsync(s => s.UserId == userId);
+            if (student == null)
+                return new { IsSuccess = false, Message = "Không tìm thấy hồ sơ học sinh!" };
+
+            var assignments = await _context.Assignments
+                .Where(a => a.StudentId == student.UserId)
+                .Join(_context.Lessons, a => a.LessonId, l => l.Id, (a, l) => new
+                {
+                    a.Id,
+                    a.LessonId,
+                    LessonTitle = l.Title,
+                    a.Status,
+                    a.DueDate
+                })
+                .OrderByDescending(a => a.Id)
+                .ToListAsync();
+
+            return new { IsSuccess = true, Data = assignments };
         }
     }
 }

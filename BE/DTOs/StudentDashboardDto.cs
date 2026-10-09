@@ -4,6 +4,7 @@ namespace BE.DTOs
     {
         public string Nickname { get; set; } = string.Empty;
         public int TotalPoints { get; set; }
+        public int TimeLimitMinutes { get; set; } = 60;
         public List<string> EarnedBadges { get; set; } = new List<string>();
     }
 }

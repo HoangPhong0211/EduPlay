@@ -1,0 +1,289 @@
+/* ==========================================================================
+   ChildManagement.css - Child account & profile management
+   Theme: Royal Blue (#2563eb) and Slate Neutrals
+   ========================================================================== */
+
+.childmgmt-page {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  animation: childFade 0.2s ease-out;
+}
+
+@keyframes childFade {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 1. Header Card */
+.childmgmt-header-card {
+  background: #ffffff;
+  padding: 18px 22px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.childmgmt-header-info h1 {
+  font-size: 19px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 4px 0;
+  letter-spacing: -0.2px;
+}
+
+.childmgmt-header-info p {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+}
+
+.childmgmt-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* 2. Toolbar & Search */
+.childmgmt-toolbar {
+  background: #ffffff;
+  padding: 12px 18px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.search-box-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 240px;
+}
+
+.search-box-wrap label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #475569;
+  white-space: nowrap;
+}
+
+.search-input-box {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 4px 10px;
+  flex: 1;
+  max-width: 380px;
+  transition: all 0.15s ease;
+}
+
+.search-input-box:focus-within {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.search-input-box input {
+  border: none;
+  background: transparent;
+  outline: none;
+  width: 100%;
+  font-size: 13px;
+  color: #0f172a;
+  padding: 3px 0;
+  font-family: inherit;
+}
+
+.btn-clear-search {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.toolbar-counter {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.toolbar-counter strong {
+  color: #2563eb;
+}
+
+/* 3. Cards Grid */
+.childmgmt-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.child-profile-card {
+  background: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: all 0.15s ease;
+}
+
+.child-profile-card:hover {
+  border-color: #cbd5e1;
+}
+
+.profile-card-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.child-avatar-big {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1d4ed8;
+  font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.child-info-block {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.child-display-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.child-account-name {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.child-id-tag {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.child-points-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 6px;
+  padding: 4px 10px;
+  flex-shrink: 0;
+}
+
+.points-number {
+  font-size: 15px;
+  font-weight: 700;
+  color: #166534;
+  line-height: 1.1;
+}
+
+.points-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #15803d;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.profile-card-body {
+  background: #f8fafc;
+  border-radius: 6px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.spec-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12.5px;
+}
+
+.spec-title {
+  color: #64748b;
+}
+
+.spec-data {
+  font-weight: 600;
+  color: #334155;
+}
+
+.spec-data.highlighted {
+  color: #1d4ed8;
+}
+
+.spec-data.active {
+  color: #15803d;
+}
+
+.profile-card-footer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* Empty & Loading states */
+.childmgmt-loading-card,
+.childmgmt-empty-card {
+  background: #ffffff;
+  border: 1px dashed #cbd5e1;
+  border-radius: 8px;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.childmgmt-empty-card h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 6px 0;
+}
+
+.childmgmt-empty-card p {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0 0 16px 0;
+  max-width: 440px;
+  margin-left: auto;
+  margin-right: auto;
+}

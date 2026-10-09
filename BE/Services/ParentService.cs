@@ -106,5 +106,65 @@ namespace BE.Services
 
             return new BaseResponse { IsSuccess = true, Message = "Giao nhiệm vụ thành công!" };
         }
+
+        public async Task<object> GetMyStudentsAsync(int parentId)
+        {
+            var students = await _context.Students
+                .Where(s => s.ParentId == parentId)
+                .Join(_context.Users, s => s.UserId, u => u.Id, (s, u) => new
+                {
+                    StudentId = s.UserId,
+                    Username = u.Username,
+                    Nickname = s.Nickname,
+                    TotalPoints = s.TotalPoints,
+                    TimeLimitMinutes = s.TimeLimitMinutes,
+                    CreatedAt = u.CreatedAt
+                })
+                .ToListAsync();
+
+            return students;
+        }
+
+        public async Task<object> GetMyAssignmentsAsync(int parentId)
+        {
+            var assignments = await _context.Assignments
+                .Where(a => a.ParentId == parentId)
+                .Join(_context.Students, a => a.StudentId, s => s.UserId, (a, s) => new { a, s })
+                .Join(_context.Lessons, x => x.a.LessonId, l => l.Id, (x, l) => new
+                {
+                    AssignmentId = x.a.Id,
+                    StudentId = x.a.StudentId,
+                    StudentNickname = x.s.Nickname,
+                    LessonId = x.a.LessonId,
+                    LessonTitle = l.Title,
+                    TopicId = l.TopicId,
+                    DueDate = x.a.DueDate,
+                    Status = x.a.Status
+                })
+                .OrderByDescending(x => x.AssignmentId)
+                .ToListAsync();
+
+            return assignments;
+        }
+
+        public async Task<object> GetAvailableLessonsAsync()
+        {
+            var lessons = await _context.Lessons
+                .Include(l => l.Topic)
+                .OrderBy(l => l.Topic != null ? l.Topic.GradeLevel : 1)
+                .ThenBy(l => l.OrderIndex)
+                .Select(l => new
+                {
+                    LessonId = l.Id,
+                    Title = l.Title,
+                    OrderIndex = l.OrderIndex,
+                    TopicId = l.TopicId,
+                    TopicName = l.Topic != null ? l.Topic.Name : "",
+                    GradeLevel = l.Topic != null ? l.Topic.GradeLevel : 1
+                })
+                .ToListAsync();
+
+            return lessons;
+        }
     }
 }
