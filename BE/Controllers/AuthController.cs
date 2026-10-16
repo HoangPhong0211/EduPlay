@@ -19,8 +19,19 @@ namespace BE.Controllers
         public async Task<IActionResult> Register([FromBody] RegisterDto dto)
         {
             // DTO Validation tự động được kiểm tra bởi thuộc tính [ApiController] 
-
-            var result = await _authService.RegisterAsync(dto);
+            AuthResponse result;
+            try
+            {
+                result = await _authService.RegisterAsync(dto);
+            }
+            catch (AuthenticationDatabaseException)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable, new AuthResponse
+                {
+                    IsSuccess = false,
+                    Message = "Không thể hoàn tất đăng ký do lỗi cơ sở dữ liệu. Vui lòng kiểm tra SQL Server và cấu hình DefaultConnection."
+                });
+            }
 
             if (!result.IsSuccess)
             {
@@ -39,7 +50,19 @@ namespace BE.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto dto)
         {
-            var result = await _authService.LoginAsync(dto);
+            AuthResponse result;
+            try
+            {
+                result = await _authService.LoginAsync(dto);
+            }
+            catch (AuthenticationDatabaseException)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable, new AuthResponse
+                {
+                    IsSuccess = false,
+                    Message = "Không thể đăng nhập do lỗi cơ sở dữ liệu. Vui lòng kiểm tra SQL Server và cấu hình DefaultConnection."
+                });
+            }
 
             if (!result.IsSuccess)
                 return Unauthorized(result); // Trả về lỗi 401 nếu sai mật khẩu

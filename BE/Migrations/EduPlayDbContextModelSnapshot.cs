@@ -128,16 +128,15 @@ namespace BE.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("TopicId");
+
                     b.ToTable("Lessons");
                 });
 
             modelBuilder.Entity("BE.Models.Parent", b =>
                 {
                     b.Property<int>("UserId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -178,6 +177,18 @@ namespace BE.Migrations
                     b.Property<int>("LessonId")
                         .HasColumnType("int");
 
+                    b.Property<string>("OptionA")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OptionB")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OptionC")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OptionD")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("QuestionType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -190,10 +201,7 @@ namespace BE.Migrations
             modelBuilder.Entity("BE.Models.Student", b =>
                 {
                     b.Property<int>("UserId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
 
                     b.Property<string>("AvatarUrl")
                         .HasColumnType("nvarchar(max)");
@@ -315,12 +323,38 @@ namespace BE.Migrations
                     b.Navigation("Student");
                 });
 
+            modelBuilder.Entity("BE.Models.Lesson", b =>
+                {
+                    b.HasOne("BE.Models.Topic", "Topic")
+                        .WithMany("Lessons")
+                        .HasForeignKey("TopicId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Topic");
+                });
+
+            modelBuilder.Entity("BE.Models.Parent", b =>
+                {
+                    b.HasOne("BE.Models.User", null)
+                        .WithOne()
+                        .HasForeignKey("BE.Models.Parent", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("BE.Models.Student", b =>
                 {
                     b.HasOne("BE.Models.Parent", null)
                         .WithMany()
                         .HasForeignKey("ParentId")
                         .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("BE.Models.User", null)
+                        .WithOne()
+                        .HasForeignKey("BE.Models.Student", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -351,6 +385,11 @@ namespace BE.Migrations
             modelBuilder.Entity("BE.Models.Student", b =>
                 {
                     b.Navigation("StudentBadges");
+                });
+
+            modelBuilder.Entity("BE.Models.Topic", b =>
+                {
+                    b.Navigation("Lessons");
                 });
 #pragma warning restore 612, 618
         }

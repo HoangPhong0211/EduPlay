@@ -8,6 +8,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using System.Data.Common;
 using System.Net;
 using System.Net.Mail;
 
@@ -17,65 +19,70 @@ namespace BE.Services
     {
         private readonly EduPlayDbContext _context;
         private readonly IConfiguration _config;
+        private readonly ILogger<AuthService> _logger;
 
-        public AuthService(EduPlayDbContext context, IConfiguration config)
+        public AuthService(EduPlayDbContext context, IConfiguration config, ILogger<AuthService> logger)
         {
             _context = context;
             _config = config;
+            _logger = logger;
         }
 
         public async Task<AuthResponse> RegisterAsync(RegisterDto dto)
         {
-            // Kiểm tra Role: Chặn không cho gọi API đăng ký tự do với Role Student
-            // Học sinh phải do Phụ huynh tạo hồ sơ
-            if (dto.Role == UserRole.Student)
+            if (dto.Role != UserRole.Parent)
             {
-                return new AuthResponse { IsSuccess = false, Message = "Tài khoản Học sinh phải do Phụ huynh tạo!" };
+                return new AuthResponse
+                {
+                    IsSuccess = false,
+                    Message = "Chỉ được phép đăng ký tài khoản Phụ huynh. Tài khoản học sinh do phụ huynh tạo; quyền Admin do quản trị viên cấp."
+                };
             }
 
-            if (await _context.Users.AnyAsync(u => u.Username == dto.Username))
-            {
-                return new AuthResponse { IsSuccess = false, Message = "Tài khoản đã tồn tại!" };
-            }
-
-            // Mở Transaction để đảm bảo tính toàn vẹn dữ liệu
-            using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
+                if (await _context.Users.AnyAsync(u => u.Username == dto.Username))
+                {
+                    return new AuthResponse { IsSuccess = false, Message = "Tài khoản đã tồn tại!" };
+                }
+
+                await using var transaction = await _context.Database.BeginTransactionAsync();
                 var user = new User
                 {
                     Username = dto.Username,
                     PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password), // Mã hóa 1 chiều
-                    Role = dto.Role.Value.ToString()
+                    Role = UserRole.Parent.ToString()
                 };
 
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync(); // Lưu để EF Core sinh ra user.Id
 
-                if (dto.Role == UserRole.Parent)
-                {
-                    _context.Parents.Add(new Parent { UserId = user.Id });
-                    await _context.SaveChangesAsync(); // Lưu bảng Parent
-                }
+                _context.Parents.Add(new Parent { UserId = user.Id });
+                await _context.SaveChangesAsync(); // Lưu bảng Parent
 
                 await transaction.CommitAsync(); // Xác nhận Transaction thành công
                 return new AuthResponse { IsSuccess = true, Message = "Đăng ký thành công!" };
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex is DbException or DbUpdateException)
             {
-                await transaction.RollbackAsync(); // Hoàn tác nếu có lỗi
-                Console.WriteLine($"[REGISTER ERROR] {ex}");
-                return new AuthResponse { 
-                    IsSuccess = false, 
-                    Message = $"Có lỗi xảy ra trong quá trình lưu dữ liệu: {ex.Message} {(ex.InnerException != null ? ex.InnerException.Message : "")}" 
-                };
+                _logger.LogError(ex, "Database error while registering user {Username}", dto.Username);
+                throw new AuthenticationDatabaseException(ex);
             }
         }
 
         public async Task<AuthResponse> LoginAsync(LoginDto dto)
         {
-            // 1. Tìm User
-            var user = await _context.Users.SingleOrDefaultAsync(u => u.Username == dto.Username);
+            User? user;
+            try
+            {
+                user = await _context.Users.SingleOrDefaultAsync(u => u.Username == dto.Username);
+            }
+            catch (Exception ex) when (ex is DbException or DbUpdateException)
+            {
+                _logger.LogError(ex, "Database error while logging in user {Username}", dto.Username);
+                throw new AuthenticationDatabaseException(ex);
+            }
+
             if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
             {
                 return new AuthResponse { IsSuccess = false, Message = "Tài khoản hoặc mật khẩu không đúng!" };
@@ -187,6 +194,15 @@ namespace BE.Services
             await _context.SaveChangesAsync();
 
             return new BaseResponse { IsSuccess = true, Message = "Khôi phục mật khẩu thành công!" };
+        }
+
+    }
+
+    public sealed class AuthenticationDatabaseException : Exception
+    {
+        public AuthenticationDatabaseException(Exception innerException)
+            : base("Authentication failed because the database is unavailable.", innerException)
+        {
         }
     }
 }

@@ -133,10 +133,7 @@ namespace BE.Migrations
             modelBuilder.Entity("BE.Models.Parent", b =>
                 {
                     b.Property<int>("UserId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -185,10 +182,7 @@ namespace BE.Migrations
             modelBuilder.Entity("BE.Models.Student", b =>
                 {
                     b.Property<int>("UserId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
 
                     b.Property<string>("AvatarUrl")
                         .HasColumnType("nvarchar(max)");

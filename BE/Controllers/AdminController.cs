@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using BE.Services;
@@ -31,15 +31,16 @@ namespace BE.Controllers
 
         [HttpPost("import-excel")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> ImportQuestionsFromExcel([FromForm] IFormFile file, [FromForm] int? lessonId = null, [FromForm] int? defaultLessonId = null)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> ImportQuestionsFromExcel([FromForm] ImportQuestionsExcelDto dto)
         {
-            if (file == null || file.Length == 0)
+            if (dto.File == null || dto.File.Length == 0)
             {
                 return BadRequest(new BaseResponse { IsSuccess = false, Message = "Vui lòng chọn file Excel để tải lên." });
             }
 
-            int targetLessonId = lessonId ?? defaultLessonId ?? 0;
-            var result = await _adminService.ImportQuestionsFromExcelAsync(file, targetLessonId);
+            int targetLessonId = dto.LessonId ?? dto.DefaultLessonId ?? 0;
+            var result = await _adminService.ImportQuestionsFromExcelAsync(dto.File, targetLessonId);
             if (!result.IsSuccess)
             {
                 return BadRequest(result);

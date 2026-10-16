@@ -56,4 +56,11 @@ namespace BE.DTOs
         [Required(ErrorMessage = "Gợi ý không được để trống")]
         public string Hint { get; set; } = string.Empty;
     }
+
+    public class ImportQuestionsExcelDto
+    {
+        public Microsoft.AspNetCore.Http.IFormFile? File { get; set; }
+        public int? LessonId { get; set; }
+        public int? DefaultLessonId { get; set; }
+    }
 }
