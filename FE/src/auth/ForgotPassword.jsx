@@ -63,13 +63,14 @@ export default function ForgotPassword() {
       const message = res.data?.message || 'Mã OTP đã được gửi thành công.';
       setSuccessMsg(message);
 
-      // Trích xuất email người nhận và mã OTP 6 số từ phản hồi giả lập
-      let recipientEmail = `${trimmedUser.toLowerCase()}@gmail.com`;
-      const emailMatch = message.match(/Người nhận:\s*([^\s|]+)/i);
+      // Trích xuất email người nhận
+      let recipientEmail = '';
+      const emailMatch = message.match(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/);
       if (emailMatch && emailMatch[1]) {
         recipientEmail = emailMatch[1].trim();
       }
 
+      // Trích xuất mã OTP 6 số nếu Backend trả về (chế độ mô phỏng dev)
       let extractedOtp = '';
       const otpMatch = message.match(/\b\d{6}\b/);
       if (otpMatch) {
@@ -81,15 +82,20 @@ export default function ForgotPassword() {
       const timeString = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')} ngày ${now.getDate().toString().padStart(2, '0')}/${(now.getMonth() + 1).toString().padStart(2, '0')}/${now.getFullYear()}`;
 
       setSimulatedEmail({
-        to: recipientEmail,
+        to: recipientEmail || `${trimmedUser}@gmail.com`,
         from: 'no-reply@eduplay.vn',
         subject: '[EduPlay] Mã OTP khôi phục mật khẩu tài khoản',
         otp: extractedOtp,
         time: timeString,
       });
 
-      // Mở cửa sổ giả lập hòm thư Email cho người dùng trải nghiệm
-      setShowEmailModal(true);
+      // CHỈ mở cửa sổ hộp thư giả lập nếu có mã OTP trả về (chế độ mô phỏng dev)
+      // Nếu gửi email thật thành công qua SMTP, KHÔNG mở hộp thư giả lập bị rỗng
+      if (extractedOtp) {
+        setShowEmailModal(true);
+      } else {
+        setShowEmailModal(false);
+      }
 
       // Chuyển sang Bước 2
       setStep(2);

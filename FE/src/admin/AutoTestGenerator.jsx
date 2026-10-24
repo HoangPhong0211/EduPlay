@@ -25,6 +25,11 @@ const generateAutoTestApi = async (payload) => {
   return res.data;
 };
 
+const publishTestApi = async (payload) => {
+  const res = await axiosClient.post('/admin/publish-test', payload);
+  return res.data;
+};
+
 // ============================================================================
 // 2. Component Chính: AutoTestGenerator
 // ============================================================================
@@ -243,13 +248,33 @@ function AutoTestGenerator() {
   // --------------------------------------------------------------------------
   // Xử lý PHÁT HÀNH: Gửi đề bài cho Học sinh (Nút xanh Cột phải)
   // --------------------------------------------------------------------------
-  const handlePublishTest = () => {
+  const handlePublishTest = async () => {
+    if (!selectedLessonId) {
+      showToast('Vui lòng chọn bài học cần phát hành!', 'error');
+      return;
+    }
+
     setIsPublishing(true);
     try {
-      // Thông báo thành công và reset lại khu vực xem trước bên phải theo yêu cầu
-      showToast('Thành công! Đề bài đã được gửi vào khóa học cho học sinh', 'success');
-      setGeneratedQuestions(null);
-      setGeneratedMeta(null);
+      const qIds = generatedQuestions && Array.isArray(generatedQuestions)
+        ? generatedQuestions.map((q) => q.id)
+        : null;
+
+      const res = await publishTestApi({
+        lessonId: parseInt(selectedLessonId, 10),
+        questionIds: qIds
+      });
+
+      if (res?.isSuccess) {
+        showToast(res.message || 'Thành công! Đề bài đã được gửi vào khóa học cho học sinh.', 'success');
+        setGeneratedQuestions(null);
+        setGeneratedMeta(null);
+      } else {
+        showToast(res?.message || 'Không thể phát hành đề thi!', 'error');
+      }
+    } catch (err) {
+      console.error('Lỗi khi phát hành đề thi:', err);
+      showToast(err.response?.data?.message || 'Có lỗi xảy ra khi phát hành đề thi!', 'error');
     } finally {
       setIsPublishing(false);
     }

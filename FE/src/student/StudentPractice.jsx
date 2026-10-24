@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link, useOutletContext } from 'react-router-dom';
+import { useParams, useSearchParams, Link, useOutletContext } from 'react-router-dom';
 import axiosClient from '../api/axiosClient';
 import './StudentPractice.css';
 
 export default function StudentPractice() {
   const { lessonId } = useParams();
-  const { refreshStudentInfo } = useOutletContext();
+  const [searchParams] = useSearchParams();
+  const assignmentId = searchParams.get('assignmentId');
+  const { refreshStudentInfo, isTimeUp } = useOutletContext();
 
   const [lessonInfo, setLessonInfo] = useState(null);
   const [questions, setQuestions] = useState([]);
@@ -29,13 +31,16 @@ export default function StudentPractice() {
   const [isLoading, setIsLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState('');
 
-  // Tải danh sách câu hỏi của bài học
+  // Tải danh sách câu hỏi của bài học hoặc đề bài tập được giao
   useEffect(() => {
     const fetchQuestions = async () => {
       setIsLoading(true);
       setErrorMsg('');
       try {
-        const res = await axiosClient.get(`/student/lesson/${lessonId}/questions`);
+        const url = assignmentId
+          ? `/student/assignment/${assignmentId}/questions`
+          : `/student/lesson/${lessonId}/questions`;
+        const res = await axiosClient.get(url);
         if (res.data?.isSuccess) {
           setLessonInfo(res.data.lesson || null);
           const list = Array.isArray(res.data.data) ? res.data.data : [];
@@ -52,7 +57,7 @@ export default function StudentPractice() {
     };
 
     fetchQuestions();
-  }, [lessonId]);
+  }, [lessonId, assignmentId]);
 
   const currentQuestion = questions[currentIndex];
 
@@ -66,6 +71,11 @@ export default function StudentPractice() {
 
   // Nộp câu trả lời
   const handleSubmitAnswer = async () => {
+    if (isTimeUp) {
+      alert('Đã hết thời gian học hôm nay theo cài đặt của bố mẹ. Bạn hãy nghỉ ngơi để bảo vệ mắt và sức khỏe nhé!');
+      return;
+    }
+
     if (!currentQuestion) return;
 
     const answer =
@@ -128,12 +138,19 @@ export default function StudentPractice() {
   };
 
   // Chuyển sang câu tiếp theo hoặc hoàn thành
-  const handleNextQuestion = () => {
+  const handleNextQuestion = async () => {
     if (currentIndex + 1 < questions.length) {
       setCurrentIndex((prev) => prev + 1);
       resetQuestionState();
     } else {
       setIsCompletedSession(true);
+      if (assignmentId) {
+        try {
+          await axiosClient.post(`/student/complete-assignment/${assignmentId}`);
+        } catch (err) {
+          console.error('Lỗi khi đánh dấu hoàn thành bài tập:', err);
+        }
+      }
     }
   };
 
@@ -184,8 +201,8 @@ export default function StudentPractice() {
         <p className="error-desc">
           Thầy cô hoặc quản trị viên đang cập nhật ngân hàng câu hỏi. Bạn hãy quay lại sau hoặc thử các bài học khác nhé!
         </p>
-        <Link to="/student/roadmap" className="btn-back-roadmap">
-          ← Quay về Lộ trình học
+        <Link to={assignmentId ? "/student/assignments" : "/student/roadmap"} className="btn-back-roadmap">
+          {assignmentId ? "← Quay về Danh sách nhiệm vụ" : "← Quay về Lộ trình học"}
         </Link>
       </div>
     );
@@ -220,9 +237,15 @@ export default function StudentPractice() {
           <button onClick={handleRestartSession} className="btn-retry-session">
             Luyện tập lại
           </button>
-          <Link to="/student/roadmap" className="btn-primary-finish">
-            Tiếp tục Lộ trình học →
-          </Link>
+          {assignmentId ? (
+            <Link to="/student/assignments" className="btn-primary-finish">
+              Về danh sách nhiệm vụ →
+            </Link>
+          ) : (
+            <Link to="/student/roadmap" className="btn-primary-finish">
+              Tiếp tục Lộ trình học →
+            </Link>
+          )}
         </div>
       </div>
     );
@@ -233,8 +256,8 @@ export default function StudentPractice() {
       {/* Header thanh trạng thái bài học */}
       <div className="practice-top-bar">
         <div className="top-bar-left">
-          <Link to="/student/roadmap" className="back-link">
-            ← Lộ trình
+          <Link to={assignmentId ? "/student/assignments" : "/student/roadmap"} className="back-link">
+            {assignmentId ? "← Nhiệm vụ" : "← Lộ trình"}
           </Link>
           <div className="lesson-breadcrumb">
             <span className="topic-name-crumb">{lessonInfo?.topicName || 'Toán học'}</span>
@@ -261,6 +284,26 @@ export default function StudentPractice() {
 
       {/* Thẻ Câu Hỏi Chính */}
       <div className="question-play-card">
+        {/* Cảnh báo khi hết thời gian học của bố mẹ cài đặt */}
+        {isTimeUp && (
+          <div style={{
+            background: '#fff7ed',
+            border: '1.5px solid #fdba74',
+            borderRadius: '12px',
+            padding: '14px 18px',
+            marginBottom: '18px',
+            color: '#c2410c',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            fontSize: '14px',
+            fontWeight: '600'
+          }}>
+            <span style={{ fontSize: '22px' }}>⌛</span>
+            <span>Đã hết thời gian học hôm nay theo cài đặt của bố mẹ. Bạn hãy dừng làm bài và nghỉ ngơi nhé!</span>
+          </div>
+        )}
+
         {/* Meta câu hỏi: Loại câu & Độ khó */}
         <div className="question-header-meta">
           <span className="question-type-chip">
@@ -302,7 +345,7 @@ export default function StudentPractice() {
                   <button
                     key={opt.label}
                     type="button"
-                    disabled={hasAnsweredCurrent}
+                    disabled={hasAnsweredCurrent || isTimeUp}
                     onClick={() => setSelectedOption(opt.text)}
                     className={`mcq-option-btn ${
                       selectedOption === opt.text ? 'selected' : ''
@@ -321,7 +364,7 @@ export default function StudentPractice() {
                   type="text"
                   placeholder="Gõ đáp án của bạn vào đây..."
                   value={inputAnswer}
-                  disabled={hasAnsweredCurrent}
+                  disabled={hasAnsweredCurrent || isTimeUp}
                   onChange={(e) => setInputAnswer(e.target.value)}
                   className="fill-answer-input"
                   autoFocus
@@ -329,7 +372,7 @@ export default function StudentPractice() {
               </div>
 
               {/* Bàn phím số tương tác */}
-              {!hasAnsweredCurrent && (
+              {!hasAnsweredCurrent && !isTimeUp && (
                 <div className="virtual-numpad">
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((num) => (
                     <button
@@ -387,13 +430,14 @@ export default function StudentPractice() {
               onClick={handleSubmitAnswer}
               disabled={
                 isSubmitting ||
+                isTimeUp ||
                 (currentQuestion.questionType === 'Trắc nghiệm'
                   ? !selectedOption
                   : !inputAnswer.trim())
               }
               className="btn-submit-answer"
             >
-              {isSubmitting ? 'Đang chấm điểm...' : 'Kiểm tra đáp án'}
+              {isTimeUp ? 'Hết thời gian học hôm nay' : isSubmitting ? 'Đang chấm điểm...' : 'Kiểm tra đáp án'}
             </button>
           ) : (
             <div className="post-answer-buttons">

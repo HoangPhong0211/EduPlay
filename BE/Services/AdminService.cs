@@ -257,6 +257,82 @@ namespace BE.Services
             }
         }
 
+        // Tính năng: Phát hành đề kiểm tra tự động cho học sinh
+        public async Task<BaseResponse> PublishTestAsync(PublishTestDto dto)
+        {
+            try
+            {
+                var lesson = await _context.Lessons
+                    .Include(l => l.Topic)
+                    .FirstOrDefaultAsync(l => l.Id == dto.LessonId);
+
+                if (lesson == null)
+                {
+                    return new BaseResponse { IsSuccess = false, Message = "Bài học không tồn tại!" };
+                }
+
+                // Lấy danh sách học sinh
+                var students = await _context.Students.ToListAsync();
+                if (!students.Any())
+                {
+                    return new BaseResponse { IsSuccess = false, Message = "Chưa có học sinh nào trong hệ thống để giao bài!" };
+                }
+
+                // Tự động kiểm tra và thêm cột QuestionIds vào bảng Assignments nếu chưa tồn tại
+                try
+                {
+                    await _context.Database.ExecuteSqlRawAsync("IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Assignments') AND name = 'QuestionIds') ALTER TABLE Assignments ADD QuestionIds NVARCHAR(MAX) NULL;");
+                }
+                catch (Exception sqlEx)
+                {
+                    _logger.LogWarning(sqlEx, "Không thể kiểm tra hoặc thêm cột QuestionIds tự động.");
+                }
+
+                string? questionIdsStr = (dto.QuestionIds != null && dto.QuestionIds.Any())
+                    ? string.Join(",", dto.QuestionIds)
+                    : null;
+
+                DateTime dueDate = dto.DueDate ?? DateTime.UtcNow.AddDays(7);
+                int assignedCount = 0;
+
+                foreach (var student in students)
+                {
+                    // Tránh tạo trùng lặp nếu bài tập đang ở trạng thái Assigned
+                    bool alreadyAssigned = await _context.Assignments
+                        .AnyAsync(a => a.StudentId == student.UserId && a.LessonId == dto.LessonId && a.Status == "Assigned");
+
+                    if (!alreadyAssigned)
+                    {
+                        _context.Assignments.Add(new Assignment
+                        {
+                            ParentId = student.ParentId,
+                            StudentId = student.UserId,
+                            LessonId = dto.LessonId,
+                            DueDate = dueDate,
+                            Status = "Assigned",
+                            QuestionIds = questionIdsStr
+                        });
+                        assignedCount++;
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+
+                return new BaseResponse
+                {
+                    IsSuccess = true,
+                    Message = assignedCount > 0
+                        ? $"Phát hành đề thành công! Đã phân phối bài tập cho {assignedCount} học sinh."
+                        : "Tất cả học sinh đã được phân phối bài học này từ trước."
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Lỗi khi phát hành đề thi cho LessonId: {LessonId}", dto.LessonId);
+                return new BaseResponse { IsSuccess = false, Message = "Lỗi hệ thống khi phát hành đề thi." };
+            }
+        }
+
         // Tính năng 3: Lấy danh sách toàn bộ người dùng
         public async Task<object> GetAllUsersAsync()
         {

@@ -1,12 +1,23 @@
 import React, { useState } from 'react';
-import { NavLink, Outlet, useNavigate, Link } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate, Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../auth/useAuth';
 import './ParentLayout.css';
 
 export default function ParentLayout() {
-  const { user, logout } = useAuth();
+  const { user, logout, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Bảo vệ route: Chỉ cho phép người dùng có quyền Parent truy cập
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (user?.role !== 'Parent') {
+    if (user?.role === 'Admin') return <Navigate to="/admin" replace />;
+    if (user?.role === 'Student') return <Navigate to="/student" replace />;
+    return <Navigate to="/" replace />;
+  }
 
   const handleLogout = () => {
     logout();

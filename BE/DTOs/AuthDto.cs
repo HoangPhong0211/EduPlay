@@ -27,6 +27,10 @@ namespace BE.DTOs
         [MinLength(8, ErrorMessage = "Password phải có ít nhất 8 ký tự.")]
         public string Password { get; set; } = string.Empty;
 
+        [Required(ErrorMessage = "Email không được để trống.")]
+        [EmailAddress(ErrorMessage = "Định dạng email không hợp lệ.")]
+        public string Email { get; set; } = string.Empty;
+
         [Required(ErrorMessage = "Role không được để trống.")]
         [EnumDataType(typeof(UserRole), ErrorMessage = "Quyền hạn không hợp lệ. Vui lòng chọn 1 (Admin), 2 (Parent) hoặc 3 (Student).")]
         public UserRole? Role { get; set; }

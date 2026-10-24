@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using BE.Services;
 using BE.DTOs;
+using BE.Data;
 
 namespace BE.Controllers
 {
@@ -13,11 +14,13 @@ namespace BE.Controllers
     {
         private readonly AdminService _adminService;
         private readonly QuestionService _questionService;
+        private readonly EduPlayDbContext _context;
 
-        public AdminController(AdminService adminService, QuestionService questionService)
+        public AdminController(AdminService adminService, QuestionService questionService, EduPlayDbContext context)
         {
             _adminService = adminService;
             _questionService = questionService;
+            _context = context;
         }
 
         [HttpPost("create-question")]
@@ -57,6 +60,14 @@ namespace BE.Controllers
             {
                 return BadRequest(result);
             }
+            return Ok(result);
+        }
+
+        [HttpPost("publish-test")]
+        public async Task<IActionResult> PublishTest([FromBody] PublishTestDto dto)
+        {
+            var result = await _adminService.PublishTestAsync(dto);
+            if (!result.IsSuccess) return BadRequest(result);
             return Ok(result);
         }
 
@@ -193,6 +204,18 @@ namespace BE.Controllers
                 return BadRequest(result);
             }
             return Ok(result);
+        }
+
+        [HttpPost("seed-data")]
+        [AllowAnonymous] // Cho phép gọi trực tiếp để khởi tạo dữ liệu mẫu
+        public async Task<IActionResult> SeedSampleData()
+        {
+            await DbSeeder.SeedSampleDataAsync(_context);
+            return Ok(new BaseResponse
+            {
+                IsSuccess = true,
+                Message = "Khởi tạo dữ liệu mẫu thành công! Tài khoản admin: admin/Password123@, phụ huynh: parent1/Password123@, học sinh: student1/Password123@ (Bé Bo - 120 điểm), student2/Password123@ (Bé Bông - 40 điểm)."
+            });
         }
     }
 }

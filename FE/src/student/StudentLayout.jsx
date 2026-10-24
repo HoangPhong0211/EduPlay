@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { NavLink, Outlet, useNavigate, Link } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate, Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../auth/useAuth';
 import axiosClient from '../api/axiosClient';
 import './StudentLayout.css';
 
 export default function StudentLayout() {
-  const { user, logout } = useAuth();
+  const { user, logout, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
   const [studentInfo, setStudentInfo] = useState({
@@ -15,12 +15,46 @@ export default function StudentLayout() {
     earnedBadges: []
   });
 
-  const [remainingSeconds, setRemainingSeconds] = useState(60 * 60);
-  const [isTimeUp, setIsTimeUp] = useState(false);
+  const todayKey = useMemo(() => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  }, []);
+
+  const storageKey = useMemo(() => {
+    const uid = user?.userId || user?.username || 'student';
+    return `eduplay_screen_time_${uid}_${todayKey}`;
+  }, [user?.userId, user?.username, todayKey]);
+
+  // Đọc giá trị lưu trữ ban đầu từ localStorage nếu có
+  const [remainingSeconds, setRemainingSeconds] = useState(() => {
+    const uid = user?.userId || user?.username || 'student';
+    const d = new Date();
+    const tKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const saved = localStorage.getItem(`eduplay_screen_time_${uid}_${tKey}`);
+    if (saved !== null) {
+      const parsed = parseInt(saved, 10);
+      return isNaN(parsed) ? 60 * 60 : Math.max(0, parsed);
+    }
+    return 60 * 60;
+  });
+
+  const [isTimeUp, setIsTimeUp] = useState(() => {
+    const uid = user?.userId || user?.username || 'student';
+    const d = new Date();
+    const tKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const saved = localStorage.getItem(`eduplay_screen_time_${uid}_${tKey}`);
+    if (saved !== null) {
+      const parsed = parseInt(saved, 10);
+      return parsed <= 0;
+    }
+    return false;
+  });
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Lấy và cập nhật thông tin học sinh (điểm số, huy hiệu)
   const fetchStudentInfo = useCallback(async () => {
+    if (!isAuthenticated || user?.role !== 'Student') return;
     try {
       const res = await axiosClient.get('/student/dashboard');
       if (res.data?.isSuccess && res.data.data) {
@@ -36,10 +70,11 @@ export default function StudentLayout() {
     } catch (err) {
       console.warn('Không thể tải thông tin học sinh:', err);
     }
-  }, [user?.username]);
+  }, [isAuthenticated, user?.role, user?.username]);
 
-  // Khởi tạo thông tin và cài đặt đồng hồ đếm ngược một lần duy nhất khi đăng nhập
+  // Khởi tạo thông tin và cài đặt đồng hồ đếm ngược khi đăng nhập (nếu chưa có trong localStorage)
   useEffect(() => {
+    if (!isAuthenticated || user?.role !== 'Student') return;
     const initData = async () => {
       try {
         const res = await axiosClient.get('/student/dashboard');
@@ -52,8 +87,14 @@ export default function StudentLayout() {
             earnedBadges: data.earnedBadges || []
           });
 
-          const totalSecs = (data.timeLimitMinutes || 60) * 60;
-          setRemainingSeconds(totalSecs);
+          // Nếu chưa có thời gian lưu cho ngày hôm nay, khởi tạo từ timeLimitMinutes
+          const saved = localStorage.getItem(storageKey);
+          if (saved === null) {
+            const totalSecs = (data.timeLimitMinutes || 60) * 60;
+            setRemainingSeconds(totalSecs);
+            setIsTimeUp(totalSecs <= 0);
+            localStorage.setItem(storageKey, totalSecs.toString());
+          }
         }
       } catch (err) {
         console.warn('Không thể tải thông tin ban đầu học sinh:', err);
@@ -61,28 +102,50 @@ export default function StudentLayout() {
     };
 
     initData();
-  }, [user?.username]);
+  }, [isAuthenticated, user?.role, user?.username, storageKey]);
 
-  // Bộ đếm ngược thời gian học mỗi ngày (Screen time)
+  // Bộ đếm ngược thời gian học mỗi ngày (Screen time) - lưu vào localStorage theo ngày
   useEffect(() => {
+    if (!isAuthenticated || user?.role !== 'Student') return;
     if (remainingSeconds <= 0) {
       setIsTimeUp(true);
+      if (storageKey) {
+        localStorage.setItem(storageKey, '0');
+      }
       return;
     }
 
     const timer = setInterval(() => {
       setRemainingSeconds(prev => {
-        if (prev <= 1) {
+        const nextVal = prev - 1;
+        if (nextVal <= 0) {
           clearInterval(timer);
           setIsTimeUp(true);
+          if (storageKey) {
+            localStorage.setItem(storageKey, '0');
+          }
           return 0;
         }
-        return prev - 1;
+        if (storageKey && nextVal % 5 === 0) {
+          localStorage.setItem(storageKey, nextVal.toString());
+        }
+        return nextVal;
       });
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [remainingSeconds]);
+  }, [isAuthenticated, user?.role, remainingSeconds <= 0, storageKey]);
+
+  // Lưu chính xác số giây còn lại khi đóng hoặc reload trang
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (storageKey && remainingSeconds >= 0) {
+        localStorage.setItem(storageKey, remainingSeconds.toString());
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [storageKey, remainingSeconds]);
 
   const formatTimer = (totalSec) => {
     const mins = Math.floor(totalSec / 60);
@@ -98,8 +161,21 @@ export default function StudentLayout() {
   // Ghi nhớ context để không tạo object mới mỗi lần re-render
   const outletContext = useMemo(() => ({
     studentInfo,
-    refreshStudentInfo: fetchStudentInfo
-  }), [studentInfo, fetchStudentInfo]);
+    refreshStudentInfo: fetchStudentInfo,
+    isTimeUp,
+    remainingSeconds
+  }), [studentInfo, fetchStudentInfo, isTimeUp, remainingSeconds]);
+
+  // Bảo vệ route: Chỉ cho phép người dùng có quyền Student truy cập
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (user?.role !== 'Student') {
+    if (user?.role === 'Parent') return <Navigate to="/parent" replace />;
+    if (user?.role === 'Admin') return <Navigate to="/admin" replace />;
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <div className="student-app-container">

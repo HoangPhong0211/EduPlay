@@ -1,4 +1,4 @@
-﻿namespace BE.Models
+namespace BE.Models
 {
     public class StudentBadge
     {
@@ -7,7 +7,7 @@
 
         public DateTime EarnedAt { get; set; } = DateTime.UtcNow;
 
-        public Student Student { get; set; }
-        public Badge Badge { get; set; }
+        public Student? Student { get; set; }
+        public Badge? Badge { get; set; }
     }
 }

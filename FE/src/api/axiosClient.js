@@ -1,20 +1,26 @@
 import axios from 'axios';
 
 // Danh sách các URL/Port của Backend (Cổng chính 5271, Cổng dự phòng 5000)
+const defaultBaseURL = import.meta.env.VITE_API_URL || 'http://localhost:5271/api';
 const CANDIDATE_URLS = [
-  import.meta.env.VITE_API_URL || 'http://localhost:5271/api',
+  defaultBaseURL,
   'http://localhost:5000/api',
 ];
 
 // Lấy URL đang hoạt động được lưu trước đó hoặc mặc định là 5271
-let activeBaseURL = sessionStorage.getItem('active_api_url') || CANDIDATE_URLS[0];
+let storedBaseURL = sessionStorage.getItem('active_api_url');
+if (storedBaseURL && storedBaseURL.includes('5000')) {
+  sessionStorage.removeItem('active_api_url');
+  storedBaseURL = null;
+}
+let activeBaseURL = storedBaseURL || defaultBaseURL;
 
 const axiosClient = axios.create({
   baseURL: activeBaseURL,
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 10000,
+  timeout: 45000, // 45 giây để đảm bảo các tác vụ AI và dữ liệu lớn không bị timeout sớm
 });
 
 // Tự động gắn Token trước khi gửi Request và đảm bảo baseURL mới nhất
@@ -46,25 +52,29 @@ axiosClient.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    // Nếu xảy ra lỗi kết nối mạng (Backend chưa bật hoặc chạy sai cổng)
+    // Nếu xảy ra lỗi kết nối mạng thực sự (không phải do quá hạn timeout)
     // Tự động thử lại bằng cổng dự phòng khác nếu chưa từng retry
-    if (!error.response && originalRequest && !originalRequest._retriedAlternative) {
+    if (
+      !error.response &&
+      error.code !== 'ECONNABORTED' &&
+      originalRequest &&
+      !originalRequest._retriedAlternative
+    ) {
       originalRequest._retriedAlternative = true;
 
       const altUrl = CANDIDATE_URLS.find((url) => url !== activeBaseURL);
       if (altUrl) {
-        console.warn(`[axiosClient] Không thể kết nối tới ${activeBaseURL}. Đang tự động chuyển sang cổng dự phòng: ${altUrl}`);
-        activeBaseURL = altUrl;
-        originalRequest.baseURL = altUrl;
-
+        console.warn(`[axiosClient] Không thể kết nối tới ${activeBaseURL}. Đang thử kết nối cổng dự phòng: ${altUrl}`);
         try {
-          const retryResponse = await axios(originalRequest);
+          const retryConfig = { ...originalRequest, baseURL: altUrl };
+          const retryResponse = await axios(retryConfig);
+          activeBaseURL = altUrl;
           sessionStorage.setItem('active_api_url', altUrl);
           console.info(`[axiosClient] Kết nối thành công cổng dự phòng ${altUrl}`);
           return retryResponse;
         } catch (retryError) {
-          // Cả 2 cổng đều không phản hồi
-          return Promise.reject(retryError);
+          // Cổng dự phòng cũng không phản hồi, giữ nguyên activeBaseURL chính
+          return Promise.reject(error);
         }
       }
     }

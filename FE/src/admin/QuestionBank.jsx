@@ -339,10 +339,16 @@ function QuestionBank() {
     });
 
     try {
-      const res = await axiosClient.post('/admin/generate-hints', {
-        questionContent: q.content,
-        gradeLevel: grade,
-      });
+      const res = await axiosClient.post(
+        '/admin/generate-hints',
+        {
+          questionContent: q.content,
+          gradeLevel: grade,
+        },
+        {
+          timeout: 60000, // Cho phép AI suy nghĩ tối đa 60 giây
+        }
+      );
 
       if (res.data?.isSuccess && res.data?.message) {
         setAiModal((prev) => ({
@@ -356,7 +362,11 @@ function QuestionBank() {
       }
     } catch (err) {
       console.error('Lỗi gọi AI Hints:', err);
-      showToast(err.response?.data?.message || 'Có lỗi khi kết nối với AI.', 'error');
+      const errorMsg =
+        err.code === 'ECONNABORTED'
+          ? 'Quá thời gian kết nối tới AI (quá 60s). Vui lòng thử lại!'
+          : err.response?.data?.message || 'Có lỗi khi kết nối với máy chủ AI.';
+      showToast(errorMsg, 'error');
       setAiModal((prev) => ({ ...prev, isLoading: false }));
     }
   };

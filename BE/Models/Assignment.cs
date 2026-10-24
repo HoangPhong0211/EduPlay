@@ -1,4 +1,4 @@
-﻿namespace BE.Models
+namespace BE.Models
 {
     public class Assignment
     {
@@ -9,5 +9,6 @@
 
         public string Status { get; set; } = "Assigned"; // Assigned, Completed
         public DateTime DueDate { get; set; } // Hạn chót
+        public string? QuestionIds { get; set; } // Danh sách ID câu hỏi của bộ đề (nếu phát hành từ sinh đề ngẫu nhiên)
     }
 }

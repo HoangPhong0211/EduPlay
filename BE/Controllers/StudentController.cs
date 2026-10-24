@@ -71,5 +71,32 @@ namespace BE.Controllers
             var result = await _studentService.GetMyAssignmentsAsync(userId);
             return Ok(result);
         }
+
+        [HttpGet("assignment/{assignmentId}/questions")]
+        public async Task<IActionResult> GetAssignmentQuestions(int assignmentId)
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+                return Unauthorized("Phiên đăng nhập không hợp lệ.");
+
+            var result = await _studentService.GetAssignmentQuestionsAsync(assignmentId, userId);
+            if (result != null && result.GetType().GetProperty("IsSuccess")?.GetValue(result) is bool isSuccess && !isSuccess)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
+        [HttpPost("complete-assignment/{assignmentId}")]
+        public async Task<IActionResult> CompleteAssignment(int assignmentId)
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+                return Unauthorized("Phiên đăng nhập không hợp lệ.");
+
+            var result = await _studentService.CompleteAssignmentAsync(assignmentId, userId);
+            if (!result.IsSuccess) return BadRequest(result);
+            return Ok(result);
+        }
     }
 }

@@ -3,6 +3,7 @@ import LandingPage from './shared/LandingPage';
 import Login from './auth/Login';
 import Register from './auth/Register';
 import ForgotPassword from './auth/ForgotPassword';
+import ProtectedRoute from './auth/ProtectedRoute';
 import AdminLayout from './admin/AdminLayout';
 import CourseManagement from './admin/CourseManagement';
 import QuestionBank from './admin/QuestionBank';
@@ -31,8 +32,15 @@ function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
 
-      {/* Phân hệ Quản trị viên */}
-      <Route path="/admin" element={<AdminLayout />}>
+      {/* Phân hệ Quản trị viên (Chỉ Admin) */}
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute allowedRoles={['Admin']}>
+            <AdminLayout />
+          </ProtectedRoute>
+        }
+      >
         {/* Mặc định vào /admin sẽ chuyển hướng tới trang quản lý khóa học */}
         <Route index element={<Navigate to="courses" replace />} />
 
@@ -46,8 +54,15 @@ function App() {
         <Route path="users" element={<UserManagement />} />
       </Route>
 
-      {/* Phân hệ Phụ huynh */}
-      <Route path="/parent" element={<ParentLayout />}>
+      {/* Phân hệ Phụ huynh (Chỉ Parent) */}
+      <Route
+        path="/parent"
+        element={
+          <ProtectedRoute allowedRoles={['Parent']}>
+            <ParentLayout />
+          </ProtectedRoute>
+        }
+      >
         <Route index element={<Navigate to="dashboard" replace />} />
         <Route path="dashboard" element={<ParentDashboard />} />
         <Route path="children" element={<ChildManagement />} />
@@ -56,8 +71,15 @@ function App() {
         <Route path="create-student" element={<Navigate to="/parent/children" replace />} />
       </Route>
 
-      {/* Phân hệ Học sinh */}
-      <Route path="/student" element={<StudentLayout />}>
+      {/* Phân hệ Học sinh (Chỉ Student) */}
+      <Route
+        path="/student"
+        element={
+          <ProtectedRoute allowedRoles={['Student']}>
+            <StudentLayout />
+          </ProtectedRoute>
+        }
+      >
         <Route index element={<Navigate to="dashboard" replace />} />
         <Route path="dashboard" element={<StudentDashboard />} />
         <Route path="roadmap" element={<StudentRoadmap />} />

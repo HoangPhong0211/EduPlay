@@ -1,4 +1,4 @@
-﻿using BE.Data;
+using BE.Data;
 using BE.DTOs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -48,6 +48,11 @@ namespace BE.Services
                 contents = new[]
                 {
                     new { parts = new[] { new { text = prompt } } }
+                },
+                generationConfig = new
+                {
+                    temperature = 0.4,
+                    maxOutputTokens = 350
                 }
             };
 
@@ -56,15 +61,25 @@ namespace BE.Services
             try
             {
                 string requestUrl = $"{baseUrl}?key={apiKey}";
-                var response = await _httpClient.PostAsync(requestUrl, content);
-
-                if (!response.IsSuccessStatusCode)
+                using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(8));
+                HttpResponseMessage? response = null;
+                try
                 {
-                    // Thử gọi qua endpoint gemini-3.5-flash-lite nếu model chính bị 404 hoặc 503
+                    response = await _httpClient.PostAsync(requestUrl, content, cts.Token);
+                }
+                catch
+                {
+                    // Quá hạn hoặc lỗi mạng ở model chính -> thử sang model dự phòng
+                }
+
+                if (response == null || !response.IsSuccessStatusCode)
+                {
+                    // Thử gọi qua endpoint gemini-3.7-flash hoặc gemini-3.5-flash-lite
                     try
                     {
-                        string fallbackModelUrl = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key={apiKey}";
-                        var retryResponse = await _httpClient.PostAsync(fallbackModelUrl, content);
+                        using var fallbackCts = new CancellationTokenSource(TimeSpan.FromSeconds(6));
+                        string fallbackModelUrl = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.7-flash:generateContent?key={apiKey}";
+                        var retryResponse = await _httpClient.PostAsync(fallbackModelUrl, content, fallbackCts.Token);
                         if (retryResponse.IsSuccessStatusCode)
                         {
                             var retryStr = await retryResponse.Content.ReadAsStringAsync();
@@ -74,17 +89,17 @@ namespace BE.Services
                                 var text = cands[0].GetProperty("content").GetProperty("parts")[0].GetProperty("text").GetString();
                                 if (!string.IsNullOrWhiteSpace(text))
                                 {
-                                    return new BaseResponse { IsSuccess = true, Message = text };
+                                    return new BaseResponse { IsSuccess = true, Message = text.Trim() };
                                 }
                             }
                         }
                     }
                     catch
                     {
-                        // Bỏ qua để chuyển sang fallback sư phạm
+                        // Chuyển sang fallback sư phạm thông minh
                     }
 
-                    // Fallback sư phạm thông minh khi API bên ngoài bận hoặc quá tải
+                    // Fallback sư phạm thông minh khi API bên ngoài bận hoặc quá tải (503/429/timeout)
                     return new BaseResponse { IsSuccess = true, Message = GeneratePedagogicalFallback(cleanQuestion, request.GradeLevel) };
                 }
 
@@ -111,7 +126,7 @@ namespace BE.Services
                 if (string.IsNullOrWhiteSpace(aiText))
                     return new BaseResponse { IsSuccess = true, Message = GeneratePedagogicalFallback(cleanQuestion, request.GradeLevel) };
 
-                return new BaseResponse { IsSuccess = true, Message = aiText };
+                return new BaseResponse { IsSuccess = true, Message = aiText.Trim() };
             }
             catch (Exception)
             {
@@ -121,9 +136,29 @@ namespace BE.Services
 
         private static string GeneratePedagogicalFallback(string question, int gradeLevel)
         {
-            return $"1. Con hãy đọc thật kỹ đề bài: '{question}' để nắm chắc phép tính hoặc yêu cầu.\n" +
-                   $"2. Hãy dùng que tính, ngón tay hoặc vẽ các chấm tròn ra nháp để đếm từng bước thật cẩn thận.\n" +
-                   $"3. Sau khi tính xong, con nhớ kiểm tra lại kết quả trước khi đưa ra câu trả lời nhé!";
+            string lower = question.ToLower();
+            string step2 = "Hãy dùng que tính, ngón tay hoặc vẽ các hình/chấm tròn ra giấy nháp để đếm từng bước thật cẩn thận.";
+
+            if (lower.Contains("+") || lower.Contains("cộng") || lower.Contains("thêm") || lower.Contains("tất cả"))
+            {
+                step2 = "Đây là phép cộng (gộp lại): Con hãy lấy số thứ nhất rồi đếm thêm số thứ hai để tìm tổng nhé.";
+            }
+            else if (lower.Contains("-") || lower.Contains("trừ") || lower.Contains("bớt") || lower.Contains("còn lại"))
+            {
+                step2 = "Đây là phép trừ (bớt đi): Con hãy lấy số ban đầu rồi bớt đi phần đề bài cho để xem còn lại bao nhiêu.";
+            }
+            else if (lower.Contains("hình") || lower.Contains("tròn") || lower.Contains("vuông") || lower.Contains("tam giác"))
+            {
+                step2 = "Con hãy quan sát kỹ từng hình, dùng ngón tay chỉ vào đúng hình dạng đề bài yêu cầu và đếm lần lượt nhé.";
+            }
+            else if (lower.Contains("lớn hơn") || lower.Contains("bé hơn") || lower.Contains("so sánh"))
+            {
+                step2 = "Con hãy đếm hoặc so sánh giá trị của từng bên xem bên nào nhiều hơn trước khi điền dấu.";
+            }
+
+            return $"1. Con hãy đọc thật kỹ đề bài: '{question}' để nắm chắc yêu cầu.\n" +
+                   $"2. {step2}\n" +
+                   $"3. Sau khi tìm được kết quả, con hãy kiểm tra lại một lần nữa trước khi chọn đáp án nhé!";
         }
 
         public async Task<BaseResponse> SaveHintToDatabaseAsync(int questionId, string selectedHint)

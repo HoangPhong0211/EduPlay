@@ -46,6 +46,12 @@ namespace BE.Services
                     return new AuthResponse { IsSuccess = false, Message = "Tài khoản đã tồn tại!" };
                 }
 
+                string trimmedEmail = dto.Email?.Trim() ?? string.Empty;
+                if (!string.IsNullOrEmpty(trimmedEmail) && await _context.Parents.AnyAsync(p => p.Email == trimmedEmail))
+                {
+                    return new AuthResponse { IsSuccess = false, Message = "Địa chỉ email này đã được đăng ký bởi một tài khoản khác!" };
+                }
+
                 await using var transaction = await _context.Database.BeginTransactionAsync();
                 var user = new User
                 {
@@ -57,7 +63,12 @@ namespace BE.Services
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync(); // Lưu để EF Core sinh ra user.Id
 
-                _context.Parents.Add(new Parent { UserId = user.Id });
+                _context.Parents.Add(new Parent
+                {
+                    UserId = user.Id,
+                    Email = trimmedEmail,
+                    PhoneNumber = string.Empty
+                });
                 await _context.SaveChangesAsync(); // Lưu bảng Parent
 
                 await transaction.CommitAsync(); // Xác nhận Transaction thành công
@@ -146,7 +157,7 @@ namespace BE.Services
                 }
             }
 
-            // Môi trường cá nhân / Demo: Tự động gán email giả lập nếu tài khoản chưa nhập email
+            // Môi trường cá nhân / Demo: Tự động gán email mặc định nếu tài khoản chưa nhập email
             if (string.IsNullOrEmpty(recipientEmail))
             {
                 recipientEmail = $"{user.Username.ToLower()}@gmail.com";
@@ -158,20 +169,94 @@ namespace BE.Services
             user.OtpExpiryTime = DateTime.UtcNow.AddMinutes(5);
             await _context.SaveChangesAsync();
 
-            // GIẢ LẬP GỬI EMAIL: In ra cửa sổ Terminal/Console để dễ kiểm tra
+            string emailSubject = "[EduPlay] Mã OTP khôi phục mật khẩu";
+            string emailBody = $@"
+                <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px;'>
+                    <h2 style='color: #00838f; text-align: center;'>Khôi phục mật khẩu EduPlay</h2>
+                    <p>Xin chào <strong>{user.Username}</strong>,</p>
+                    <p>Bạn (hoặc phụ huynh) vừa gửi yêu cầu khôi phục mật khẩu tài khoản EduPlay. Dưới đây là mã xác thực OTP của bạn:</p>
+                    <div style='text-align: center; margin: 24px 0;'>
+                        <span style='font-size: 32px; font-weight: bold; letter-spacing: 6px; color: #00838f; background: #e0f7fa; padding: 12px 28px; border-radius: 8px; display: inline-block;'>{otp}</span>
+                    </div>
+                    <p style='color: #ef4444; font-size: 13px;'>* Mã OTP này có hiệu lực trong vòng 5 phút. Vui lòng không chia sẻ mã này cho bất kỳ ai.</p>
+                    <hr style='border: none; border-top: 1px solid #e2e8f0; margin: 20px 0;' />
+                    <p style='font-size: 12px; color: #64748b; text-align: center;'>Đội ngũ hỗ trợ EduPlay - Nền tảng học toán thông minh cho học sinh tiểu học</p>
+                </div>";
+
+            // Thử gửi Email thật qua SMTP nếu cấu hình đã sẵn sàng
+            bool isRealEmailSent = await TrySendEmailAsync(recipientEmail, emailSubject, emailBody);
+
+            if (isRealEmailSent)
+            {
+                _logger.LogInformation("Đã gửi email OTP thật thành công tới: {Email}", recipientEmail);
+                return new BaseResponse
+                {
+                    IsSuccess = true,
+                    Message = $"Mã OTP đã được gửi đến email {recipientEmail}. Vui lòng kiểm tra hộp thư!"
+                };
+            }
+
+            // FALLBACK CHẾ ĐỘ MÔ PHỎNG: In ra Console terminal khi chưa cấu hình SMTP thật
             Console.WriteLine($"\n========================================");
-            Console.WriteLine($"[GIẢ LẬP EMAIL] Người nhận: {recipientEmail}");
-            Console.WriteLine($"[GIẢ LẬP EMAIL] Tiêu đề: [EduPlay] Mã OTP khôi phục mật khẩu");
-            Console.WriteLine($"[GIẢ LẬP EMAIL] Mã OTP khôi phục mật khẩu là: {otp}");
-            Console.WriteLine($"[GIẢ LẬP EMAIL] Thời gian gửi: {DateTime.Now:dd/MM/yyyy HH:mm:ss}");
+            Console.WriteLine($"[CHẾ ĐỘ MÔ PHỎNG EMAIL] Người nhận: {recipientEmail}");
+            Console.WriteLine($"[CHẾ ĐỘ MÔ PHỎNG EMAIL] Tiêu đề: {emailSubject}");
+            Console.WriteLine($"[CHẾ ĐỘ MÔ PHỎNG EMAIL] Mã OTP khôi phục mật khẩu là: {otp}");
+            Console.WriteLine($"[CHẾ ĐỘ MÔ PHỎNG EMAIL] Thời gian gửi: {DateTime.Now:dd/MM/yyyy HH:mm:ss}");
+            Console.WriteLine($"[CHẾ ĐỘ MÔ PHỎNG EMAIL] (Để gửi email thật: điền SenderEmail & SenderPassword trong appsettings.json)");
             Console.WriteLine($"========================================\n");
 
-            // Trả thông tin email và mã OTP về Frontend để giả lập hiển thị giao diện hộp thư
+            // Trả thông tin email và mã OTP về Frontend để hỗ trợ trải nghiệm kiểm thử
             return new BaseResponse
             {
                 IsSuccess = true,
-                Message = $"[GIẢ LẬP EMAIL] Người nhận: {recipientEmail} | Mã OTP: {otp}"
+                Message = $"[MÔ PHỎNG EMAIL] Người nhận: {recipientEmail} | Mã OTP: {otp}"
             };
+        }
+
+        private async Task<bool> TrySendEmailAsync(string toEmail, string subject, string bodyHtml)
+        {
+            try
+            {
+                var smtpHost = _config["EmailSettings:SmtpHost"];
+                var smtpPortStr = _config["EmailSettings:SmtpPort"];
+                var senderEmail = _config["EmailSettings:SenderEmail"];
+                var senderPassword = _config["EmailSettings:SenderPassword"];
+                var displayName = _config["EmailSettings:SenderDisplayName"] ?? "EduPlay Hỗ Trợ";
+
+                if (string.IsNullOrWhiteSpace(smtpHost) ||
+                    string.IsNullOrWhiteSpace(senderEmail) ||
+                    string.IsNullOrWhiteSpace(senderPassword))
+                {
+                    // Chưa cấu hình tài khoản SMTP thật
+                    return false;
+                }
+
+                int port = int.TryParse(smtpPortStr, out int p) ? p : 587;
+                bool enableSsl = bool.TryParse(_config["EmailSettings:EnableSsl"], out bool ssl) ? ssl : true;
+
+                using var client = new SmtpClient(smtpHost, port)
+                {
+                    Credentials = new NetworkCredential(senderEmail, senderPassword),
+                    EnableSsl = enableSsl
+                };
+
+                using var mailMessage = new MailMessage
+                {
+                    From = new MailAddress(senderEmail, displayName),
+                    Subject = subject,
+                    Body = bodyHtml,
+                    IsBodyHtml = true
+                };
+
+                mailMessage.To.Add(toEmail);
+                await client.SendMailAsync(mailMessage);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Không thể gửi email thật qua SMTP tới {Email}. Tự động fallback về Console.", toEmail);
+                return false;
+            }
         }
 
         public async Task<BaseResponse> ResetPasswordWithOtpAsync(ResetPasswordDto dto)

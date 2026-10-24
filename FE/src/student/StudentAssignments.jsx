@@ -174,7 +174,7 @@ export default function StudentAssignments() {
                 <div className="assignment-card-footer">
                   <span className="assignment-id-meta">Nhiệm vụ #{task.id}</span>
                   <Link
-                    to={`/student/practice/${task.lessonId}`}
+                    to={`/student/practice/${task.lessonId}?assignmentId=${task.id}`}
                     className={`btn-action-task ${isCompleted ? 'btn-practice-again' : 'btn-do-now'
                       }`}
                   >

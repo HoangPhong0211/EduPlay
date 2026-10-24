@@ -203,7 +203,7 @@ export default function StudentDashboard() {
                   </span>
                 </div>
                 <Link
-                  to={`/student/practice/${task.lessonId}`}
+                  to={`/student/practice/${task.lessonId}?assignmentId=${task.id}`}
                   className="btn-start-task"
                 >
                   Làm bài ngay

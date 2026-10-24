@@ -15,6 +15,8 @@ export default function AdminLayout() {
   }
 
   if (user?.role !== 'Admin') {
+    if (user?.role === 'Parent') return <Navigate to="/parent" replace />;
+    if (user?.role === 'Student') return <Navigate to="/student" replace />;
     return <Navigate to="/" replace />;
   }
 

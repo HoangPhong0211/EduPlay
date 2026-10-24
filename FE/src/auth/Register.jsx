@@ -20,6 +20,7 @@ function extractErrorMessage(error) {
 
 export default function Register() {
   const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
@@ -34,6 +35,7 @@ export default function Register() {
     setSuccessMsg('');
 
     const trimmedUsername = username.trim();
+    const trimmedEmail = email.trim();
 
     // 1. Kiểm tra username theo đúng regex Backend: ^[a-zA-Z0-9_]+$
     if (!trimmedUsername) {
@@ -47,13 +49,25 @@ export default function Register() {
       return;
     }
 
-    // 2. Kiểm tra độ dài mật khẩu >= 8 theo yêu cầu Backend
+    // 2. Kiểm tra email
+    if (!trimmedEmail) {
+      setErrorMsg('Vui lòng nhập địa chỉ email của phụ huynh để nhận mã OTP khôi phục.');
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(trimmedEmail)) {
+      setErrorMsg('Địa chỉ email không đúng định dạng (VD: example@gmail.com).');
+      return;
+    }
+
+    // 3. Kiểm tra độ dài mật khẩu >= 8 theo yêu cầu Backend
     if (password.length < 8) {
       setErrorMsg('Mật khẩu phải có ít nhất 8 ký tự.');
       return;
     }
 
-    // 3. Kiểm tra mật khẩu xác nhận
+    // 4. Kiểm tra mật khẩu xác nhận
     if (password !== confirmPassword) {
       setErrorMsg('Mật khẩu nhập lại không khớp!');
       return;
@@ -64,7 +78,8 @@ export default function Register() {
     try {
       // Backend: Role 2 = Parent (UserRole enum: Admin = 1, Parent = 2, Student = 3)
       await axiosClient.post('/auth/register', {
-        Username: trimmedUsername, 
+        Username: trimmedUsername,
+        Email: trimmedEmail,
         Password: password,
         Role: 2
       });
@@ -91,7 +106,7 @@ export default function Register() {
 
         <form onSubmit={handleRegister}>
           <div className="input-group">
-            <label htmlFor="reg-username">Tên đăng nhập</label>
+            <label htmlFor="reg-username">Tên đăng nhập *</label>
             <input 
               id="reg-username"
               type="text" 
@@ -106,7 +121,22 @@ export default function Register() {
           </div>
 
           <div className="input-group">
-            <label htmlFor="reg-password">Mật khẩu</label>
+            <label htmlFor="reg-email">Địa chỉ Email *</label>
+            <input 
+              id="reg-email"
+              type="email" 
+              placeholder="VD: phuhuynh@gmail.com" 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
+              disabled={isLoading}
+              required
+            />
+            <small className="input-hint">Dùng để nhận mã xác thực OTP khôi phục mật khẩu</small>
+          </div>
+
+          <div className="input-group">
+            <label htmlFor="reg-password">Mật khẩu *</label>
             <input 
               id="reg-password"
               type="password" 
