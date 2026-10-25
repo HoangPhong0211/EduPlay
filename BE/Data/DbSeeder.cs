@@ -148,8 +148,14 @@ namespace BE.Data
             // 3.2 KHỐI LỚP 2
             await SeedGrade2Async(context);
 
-            // 3.3 KHỐI LỚP 3
+            // 3.3 KHỐI LớP 3
             await SeedGrade3Async(context);
+
+            // 3.4 KHỐI LớP 4
+            await SeedGrade4Async(context);
+
+            // 3.5 KHỐI LớP 5
+            await SeedGrade5Async(context);
 
             // 4. Khởi tạo Nhiệm vụ mẫu (Assignments)
             var anyLesson = await context.Lessons.FirstOrDefaultAsync();
@@ -659,6 +665,252 @@ namespace BE.Data
                     }
                 };
                 context.Questions.AddRange(questions);
+                await context.SaveChangesAsync();
+            }
+        }
+
+        private static async Task SeedGrade4Async(EduPlayDbContext context)
+        {
+            // Chủ đề: Phân số và Các phép tính với phân số
+            var topicG4 = await context.Topics.FirstOrDefaultAsync(t => t.Name == "Phân số và Các phép tính với phân số" && t.GradeLevel == 4);
+            if (topicG4 == null)
+            {
+                topicG4 = new Topic
+                {
+                    GradeLevel = 4,
+                    Name = "Phân số và Các phép tính với phân số",
+                    Description = "Khám phá khái niệm phân số và thực hiện các phép tính cộng trừ phân số"
+                };
+                context.Topics.Add(topicG4);
+                await context.SaveChangesAsync();
+            }
+
+            // Bài 1: Khái niệm phân số
+            var lessonG4L1 = await context.Lessons.FirstOrDefaultAsync(l => l.TopicId == topicG4.Id && l.Title == "Khái niệm phân số");
+            if (lessonG4L1 == null)
+            {
+                lessonG4L1 = new Lesson { TopicId = topicG4.Id, Title = "Khái niệm phân số", OrderIndex = 1 };
+                context.Lessons.Add(lessonG4L1);
+                await context.SaveChangesAsync();
+
+                var questionsG4L1 = new List<Question>
+                {
+                    new Question
+                    {
+                        LessonId = lessonG4L1.Id,
+                        Content = "Phân số 2/3 có tử số là bao nhiêu?",
+                        QuestionType = "Trắc nghiệm",
+                        DifficultyLevel = "Dễ",
+                        OptionA = "1", OptionB = "2", OptionC = "3", OptionD = "5",
+                        CorrectAnswer = "2",
+                        Hint = "Tử số là số ở phíd trên của gạch nằm ngang."
+                    },
+                    new Question
+                    {
+                        LessonId = lessonG4L1.Id,
+                        Content = "Viết phân số biểu diễn phần được tô màu: Hình vuông chia 4 phần bằng nhau, tô màu 1 phần.",
+                        QuestionType = "Diền đáp án",
+                        DifficultyLevel = "Dễ",
+                        CorrectAnswer = "1/4",
+                        Hint = "Phần được tô là 1 trong tổng số 4 phần bằng nhau."
+                    },
+                    new Question
+                    {
+                        LessonId = lessonG4L1.Id,
+                        Content = "Phân số nào sau đây lớn hơn 1/2?",
+                        QuestionType = "Trắc nghiệm",
+                        DifficultyLevel = "Trung bình",
+                        OptionA = "1/4", OptionB = "1/3", OptionC = "3/4", OptionD = "2/5",
+                        CorrectAnswer = "3/4",
+                        Hint = "Quy đồng mẫu số rồi so sánh: 3/4 = 6/8, trong khi 1/2 = 4/8."
+                    },
+                    new Question
+                    {
+                        LessonId = lessonG4L1.Id,
+                        Content = "Riút gọn phân số 4/8 về dạng tối giản.",
+                        QuestionType = "Diền đáp án",
+                        DifficultyLevel = "Khó",
+                        CorrectAnswer = "1/2",
+                        Hint = "Chia cả tử số và mẫu số cho ước số chung lớn nhất là 4: 4÷4=1, 8÷4=2."
+                    }
+                };
+                context.Questions.AddRange(questionsG4L1);
+                await context.SaveChangesAsync();
+            }
+
+            // Bài 2: Cộng trừ hai phân số cùng mẫu số
+            var lessonG4L2 = await context.Lessons.FirstOrDefaultAsync(l => l.TopicId == topicG4.Id && l.Title == "Cộng trừ hai phân số cùng mẫu số");
+            if (lessonG4L2 == null)
+            {
+                lessonG4L2 = new Lesson { TopicId = topicG4.Id, Title = "Cộng trừ hai phân số cùng mẫu số", OrderIndex = 2 };
+                context.Lessons.Add(lessonG4L2);
+                await context.SaveChangesAsync();
+
+                var questionsG4L2 = new List<Question>
+                {
+                    new Question
+                    {
+                        LessonId = lessonG4L2.Id,
+                        Content = "Tính: 1/5 + 2/5 = ?",
+                        QuestionType = "Trắc nghiệm",
+                        DifficultyLevel = "Dễ",
+                        OptionA = "2/10", OptionB = "3/5", OptionC = "3/10", OptionD = "1/5",
+                        CorrectAnswer = "3/5",
+                        Hint = "Khi cộng hai phân số cùng mẫu, giữ nguyên mẫu và cộng hai tử: 1+2=3, mẫu giữ nguyên là 5."
+                    },
+                    new Question
+                    {
+                        LessonId = lessonG4L2.Id,
+                        Content = "Tính: 5/7 - 2/7 = ?",
+                        QuestionType = "Diền đáp án",
+                        DifficultyLevel = "Dễ",
+                        CorrectAnswer = "3/7",
+                        Hint = "Giữ nguyên mẫu số, trừ tử số: 5 - 2 = 3, mẫu là 7."
+                    },
+                    new Question
+                    {
+                        LessonId = lessonG4L2.Id,
+                        Content = "Mẹ rót 3/8 lít nước cam vào ly, bà rót thêm 2/8 lít. Hỏi có tất cả bao nhiêu lít nước cam?",
+                        QuestionType = "Trắc nghiệm",
+                        DifficultyLevel = "Trung bình",
+                        OptionA = "5/16", OptionB = "5/8", OptionC = "6/8", OptionD = "1/8",
+                        CorrectAnswer = "5/8",
+                        Hint = "Cộng hai phân số cùng mẫu 8: 3/8 + 2/8 = 5/8."
+                    },
+                    new Question
+                    {
+                        LessonId = lessonG4L2.Id,
+                        Content = "Tính: 7/9 - 4/9 = ? (viết kết quả dưới dạng phân số)",
+                        QuestionType = "Diền đáp án",
+                        DifficultyLevel = "Khó",
+                        CorrectAnswer = "3/9",
+                        Hint = "Trừ tử số: 7 - 4 = 3, giữ nguyên mẫu 9. Kết quả là 3/9 (có thể riút gọn thành 1/3)."
+                    }
+                };
+                context.Questions.AddRange(questionsG4L2);
+                await context.SaveChangesAsync();
+            }
+        }
+
+        private static async Task SeedGrade5Async(EduPlayDbContext context)
+        {
+            // Chủ đề: Số thập phân và Hình học cơ bản
+            var topicG5 = await context.Topics.FirstOrDefaultAsync(t => t.Name == "Số thập phân và Hình học cơ bản" && t.GradeLevel == 5);
+            if (topicG5 == null)
+            {
+                topicG5 = new Topic
+                {
+                    GradeLevel = 5,
+                    Name = "Số thập phân và Hình học cơ bản",
+                    Description = "Thực hiện các phép tính với số thập phân và tính diện tích các hình phẳng cơ bản"
+                };
+                context.Topics.Add(topicG5);
+                await context.SaveChangesAsync();
+            }
+
+            // Bài 1: Cộng trừ số thập phân
+            var lessonG5L1 = await context.Lessons.FirstOrDefaultAsync(l => l.TopicId == topicG5.Id && l.Title == "Cộng trừ số thập phân");
+            if (lessonG5L1 == null)
+            {
+                lessonG5L1 = new Lesson { TopicId = topicG5.Id, Title = "Cộng trừ số thập phân", OrderIndex = 1 };
+                context.Lessons.Add(lessonG5L1);
+                await context.SaveChangesAsync();
+
+                var questionsG5L1 = new List<Question>
+                {
+                    new Question
+                    {
+                        LessonId = lessonG5L1.Id,
+                        Content = "Tính: 3,5 + 2,4 = ?",
+                        QuestionType = "Trắc nghiệm",
+                        DifficultyLevel = "Dễ",
+                        OptionA = "5,8", OptionB = "5,9", OptionC = "6,1", OptionD = "6,0",
+                        CorrectAnswer = "5,9",
+                        Hint = "Cộng phần thập phân trước: 5+4=9 (phần lẻ 0,9), cộng phần nguyên: 3+2=5. Kết quả: 5,9."
+                    },
+                    new Question
+                    {
+                        LessonId = lessonG5L1.Id,
+                        Content = "Tính: 8,7 - 3,2 = ?",
+                        QuestionType = "Diền đáp án",
+                        DifficultyLevel = "Dễ",
+                        CorrectAnswer = "5,5",
+                        Hint = "Trừ phần thập phân: 7-2=5 (0,5), trừ phần nguyên: 8-3=5. Kết quả: 5,5."
+                    },
+                    new Question
+                    {
+                        LessonId = lessonG5L1.Id,
+                        Content = "Một chiếc bút dài 12,5 cm. Sau khi mài bật còn lại 11,8 cm. Hỏi đã mài nhỏ đi bao nhiêu cm?",
+                        QuestionType = "Trắc nghiệm",
+                        DifficultyLevel = "Trung bình",
+                        OptionA = "0,5", OptionB = "0,6", OptionC = "0,7", OptionD = "0,8",
+                        CorrectAnswer = "0,7",
+                        Hint = "Lấy chiều dài ban đầu trừ chiều dài hiện tại: 12,5 - 11,8 = 0,7 cm."
+                    },
+                    new Question
+                    {
+                        LessonId = lessonG5L1.Id,
+                        Content = "Tính: 15,63 + 4,37 = ?",
+                        QuestionType = "Diền đáp án",
+                        DifficultyLevel = "Khó",
+                        CorrectAnswer = "20",
+                        Hint = "Cộng phần phần trăm: 3+7=10 (nhớ 1), cộng phần mười: 6+3+1=10 (nhớ 1), cộng phần nguyên: 15+4+1=20."
+                    }
+                };
+                context.Questions.AddRange(questionsG5L1);
+                await context.SaveChangesAsync();
+            }
+
+            // Bài 2: Diện tích hình tam giác, hình thang
+            var lessonG5L2 = await context.Lessons.FirstOrDefaultAsync(l => l.TopicId == topicG5.Id && l.Title == "Diện tích hình tam giác, hình thang");
+            if (lessonG5L2 == null)
+            {
+                lessonG5L2 = new Lesson { TopicId = topicG5.Id, Title = "Diện tích hình tam giác, hình thang", OrderIndex = 2 };
+                context.Lessons.Add(lessonG5L2);
+                await context.SaveChangesAsync();
+
+                var questionsG5L2 = new List<Question>
+                {
+                    new Question
+                    {
+                        LessonId = lessonG5L2.Id,
+                        Content = "Hình tam giác có cạnh đáy 8 cm và chiều cao 5 cm. Diện tích hình tam giác là:",
+                        QuestionType = "Trắc nghiệm",
+                        DifficultyLevel = "Dễ",
+                        OptionA = "20 cm²", OptionB = "40 cm²", OptionC = "13 cm²", OptionD = "16 cm²",
+                        CorrectAnswer = "20 cm²",
+                        Hint = "Diện tích tam giác = (Đáy x Chiều cao) ÷ 2 = (8 x 5) ÷ 2 = 20 cm²."
+                    },
+                    new Question
+                    {
+                        LessonId = lessonG5L2.Id,
+                        Content = "Tính diện tích hình tam giác có đáy 10 cm, chiều cao 6 cm (ghi kết quả theo cm²):",
+                        QuestionType = "Diền đáp án",
+                        DifficultyLevel = "Dễ",
+                        CorrectAnswer = "30",
+                        Hint = "S = (đáy x h) ÷ 2 = (10 x 6) ÷ 2 = 30 cm²."
+                    },
+                    new Question
+                    {
+                        LessonId = lessonG5L2.Id,
+                        Content = "Hình thang có hai đáy là 6 cm và 4 cm, chiều cao 5 cm. Diện tích hình thang là:",
+                        QuestionType = "Trắc nghiệm",
+                        DifficultyLevel = "Trung bình",
+                        OptionA = "30 cm²", OptionB = "25 cm²", OptionC = "50 cm²", OptionD = "20 cm²",
+                        CorrectAnswer = "25 cm²",
+                        Hint = "S = (Đáy lớn + Đáy nhỏ) x Chiều cao ÷ 2 = (6 + 4) x 5 ÷ 2 = 25 cm²."
+                    },
+                    new Question
+                    {
+                        LessonId = lessonG5L2.Id,
+                        Content = "Một mảnh đất hình thang có hai đáy là 12 m và 8 m, chiều cao 7 m. Diện tích mảnh đất đó là bao nhiêu m²?",
+                        QuestionType = "Diền đáp án",
+                        DifficultyLevel = "Khó",
+                        CorrectAnswer = "70",
+                        Hint = "S = (12 + 8) x 7 ÷ 2 = 20 x 7 ÷ 2 = 70 m²."
+                    }
+                };
+                context.Questions.AddRange(questionsG5L2);
                 await context.SaveChangesAsync();
             }
         }

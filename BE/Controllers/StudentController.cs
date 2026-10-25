@@ -46,8 +46,8 @@ namespace BE.Controllers
         [HttpGet("roadmap/{gradeLevel}")]
         public async Task<IActionResult> GetRoadmap(int gradeLevel)
         {
-            if (gradeLevel < 1 || gradeLevel > 3)
-                return BadRequest(new { IsSuccess = false, Message = "Chỉ hỗ trợ lộ trình cho khối lớp 1, 2 và 3." });
+            if (gradeLevel < 1 || gradeLevel > 5)
+                return BadRequest(new { IsSuccess = false, Message = "Chỉ hỗ trợ lộ trình cho khối lớp 1 đến lớp 5." });
 
             var result = await _studentService.GetRoadmapAsync(gradeLevel);
             return Ok(result);

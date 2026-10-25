@@ -29,7 +29,7 @@ namespace BE.DTOs
     public class CreateTopicDto
     {
         [Required(ErrorMessage = "Khối lớp không được để trống")]
-        [Range(1, 3, ErrorMessage = "Khối lớp phải nằm trong khoảng từ 1 đến 3.")]
+        [Range(1, 5, ErrorMessage = "Khối lớp phải từ 1 đến 5")]
         public int GradeLevel { get; set; }
         
         [Required(ErrorMessage = "Tên chương mục không được để trống")]

@@ -19,7 +19,7 @@ export default function LandingPage() {
     const fetchCourses = async () => {
       setIsLoading(true);
       try {
-        const gradesToFetch = selectedGrade ? [selectedGrade] : [1, 2, 3];
+        const gradesToFetch = selectedGrade ? [selectedGrade] : [1, 2, 3, 4, 5];
         const responses = await Promise.allSettled(
           gradesToFetch.map((grade) => axiosClient.get(`/student/roadmap/${grade}`))
         );
@@ -219,6 +219,18 @@ export default function LandingPage() {
                 onClick={() => handleSelectGrade(3)}
               >
                 LỚP 3
+              </li>
+              <li
+                className={selectedGrade === 4 ? 'active' : ''}
+                onClick={() => handleSelectGrade(4)}
+              >
+                LỚP 4
+              </li>
+              <li
+                className={selectedGrade === 5 ? 'active' : ''}
+                onClick={() => handleSelectGrade(5)}
+              >
+                LỚP 5
               </li>
             </ul>
 
@@ -445,7 +457,7 @@ export default function LandingPage() {
       {/* Slogan & Bộ lọc */}
       <div className="slogan-banner" id="about-section">
         <h2>HỌC TOÁN VUI NHỘN CÙNG EDUPLAY</h2>
-        <p>Nền tảng học tập thông minh, cá nhân hóa cho học sinh tiểu học</p>
+        <p>Nền tảng học tập thông minh, cá nhân hóa cho học sinh Tiểu học Lớp 1 - 5</p>
         
         {/* Nút hành động chính trong Banner theo vai trò */}
         <div style={{ marginTop: '14px' }}>
@@ -568,7 +580,7 @@ export default function LandingPage() {
                 <div className="guide-card-item">
                   <h4 style={{ color: '#00838f' }}>🎒 Dành cho Học sinh (Student):</h4>
                   <ol>
-                    <li>Chọn khối lớp (Lớp 1, 2, 3) tại danh mục để xem các bài học toán.</li>
+                    <li>Chọn khối lớp (Lớp 1 đến Lớp 5) tại danh mục để xem các bài học toán.</li>
                     <li>Vào mục <strong>"Lộ trình học"</strong> để khám phá và học tập theo từng chủ đề.</li>
                     <li>Làm các bài <strong>"Luyện tập"</strong> và hoàn thành <strong>"Nhiệm vụ học tập"</strong> bố mẹ giao.</li>
                     <li>Tích lũy điểm thưởng để mở khóa các <strong>"Huy hiệu"</strong> vinh danh thú vị!</li>

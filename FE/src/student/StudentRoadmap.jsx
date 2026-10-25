@@ -8,7 +8,7 @@ export default function StudentRoadmap() {
   const initialGrade = parseInt(searchParams.get('grade') || '1', 10);
 
   const [selectedGrade, setSelectedGrade] = useState(
-    [1, 2, 3].includes(initialGrade) ? initialGrade : 1
+    [1, 2, 3, 4, 5].includes(initialGrade) ? initialGrade : 1
   );
   const [topics, setTopics] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -63,13 +63,13 @@ export default function StudentRoadmap() {
           <span className="roadmap-badge">KHÁM PHÁ KIẾN THỨC</span>
           <h1 className="roadmap-title">Lộ trình học Toán Tiểu học</h1>
           <p className="roadmap-desc">
-            Chương trình được thiết kế chuẩn sư phạm từ Lớp 1 đến Lớp 3, giúp bé làm chủ từng khái niệm toán học qua hệ thống bài học và câu hỏi tương tác.
+            Chương trình được thiết kế chuẩn sư phạm từ Lớp 1 đến Lớp 5 (toàn cấp Tiểu học), giúp bé làm chủ từng khái niệm toán học qua hệ thống bài học và câu hỏi tương tác.
           </p>
         </div>
 
         {/* Thanh chuyển đổi Khối Lớp */}
         <div className="grade-selector-tabs">
-          {[1, 2, 3].map((g) => (
+          {[1, 2, 3, 4, 5].map((g) => (
             <button
               key={g}
               onClick={() => handleSelectGrade(g)}

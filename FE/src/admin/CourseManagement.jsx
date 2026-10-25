@@ -172,6 +172,8 @@ function CourseManagement() {
       grade1: topics.filter((t) => t.gradeLevel === 1).length,
       grade2: topics.filter((t) => t.gradeLevel === 2).length,
       grade3: topics.filter((t) => t.gradeLevel === 3).length,
+      grade4: topics.filter((t) => t.gradeLevel === 4).length,
+      grade5: topics.filter((t) => t.gradeLevel === 5).length,
     };
   }, [topics, lessons]);
 
@@ -414,7 +416,7 @@ function CourseManagement() {
       <div className="mgmt-header">
         <div className="mgmt-header-info">
           <h1>Quản lý Khóa học & Bài học</h1>
-          <p>Tổ chức chương trình học theo Khối lớp (Lớp 1, 2, 3), phân cấp Chương mục và Bài học trực quan.</p>
+          <p>Tổ chức chương trình học theo Khối lớp (Lớp 1 đến Lớp 5), phân cấp Chương mục và Bài học trực quan.</p>
         </div>
         <div className="mgmt-header-actions">
           <button type="button" className="btn-secondary" onClick={() => loadData(true)} title="Làm mới dữ liệu">
@@ -448,8 +450,14 @@ function CourseManagement() {
         </div>
         <div className="stat-card">
           <div className="stat-details">
-            <span className="stat-label">Chương trình Lớp 2 & 3</span>
+            <span className="stat-label">Chương trình Lớp 2 &amp; 3</span>
             <h3 className="stat-value">{stats.grade2 + stats.grade3} chương</h3>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-details">
+            <span className="stat-label">Chương trình Lớp 4 &amp; 5</span>
+            <h3 className="stat-value">{stats.grade4 + stats.grade5} chương</h3>
           </div>
         </div>
       </div>
@@ -484,6 +492,20 @@ function CourseManagement() {
             onClick={() => setSelectedGrade(3)}
           >
             Lớp 3 ({stats.grade3})
+          </button>
+          <button
+            type="button"
+            className={`filter-pill ${selectedGrade === 4 ? 'active' : ''}`}
+            onClick={() => setSelectedGrade(4)}
+          >
+            Lớp 4 ({stats.grade4})
+          </button>
+          <button
+            type="button"
+            className={`filter-pill ${selectedGrade === 5 ? 'active' : ''}`}
+            onClick={() => setSelectedGrade(5)}
+          >
+            Lớp 5 ({stats.grade5})
           </button>
         </div>
 
@@ -707,6 +729,8 @@ function CourseManagement() {
                     <option value={1}>Lớp 1</option>
                     <option value={2}>Lớp 2</option>
                     <option value={3}>Lớp 3</option>
+                    <option value={4}>Lớp 4</option>
+                    <option value={5}>Lớp 5</option>
                   </select>
                 </div>
 
