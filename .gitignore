@@ -1,4 +1,10 @@
 BE/bin/
 BE/obj/
-# Ignore local secrets
+
+# Ignore local secrets (không commit file chứa API key thật)
 **/appsettings.Development.json
+
+# FE
+FE/node_modules/
+FE/dist/
+FE/dist-ssr/

@@ -54,21 +54,20 @@ builder.Services.AddOpenApi(); // .NET 9 hỗ trợ OpenApi
 
 var app = builder.Build();
 
-// Tự động kiểm tra và áp dụng Migrations & Seed dữ liệu mẫu khi khởi động ứng dụng
+// Seed dữ liệu mẫu khi khởi động (Migrations cần chạy trước bằng: dotnet ef database update)
 using (var scope = app.Services.CreateScope())
 {
     try
     {
         var dbContext = scope.ServiceProvider.GetRequiredService<EduPlayDbContext>();
-        dbContext.Database.Migrate();
 
-        // Tự động khởi tạo dữ liệu mẫu phong phú cho hệ thống
+        // Khởi tạo dữ liệu mẫu phong phú cho hệ thống (badges, tài khoản, chương trình học...)
         DbSeeder.SeedSampleDataAsync(dbContext).GetAwaiter().GetResult();
     }
     catch (Exception ex)
     {
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "Lỗi khi tự động thực thi EF Core Migrations hoặc Seeding dữ liệu.");
+        logger.LogError(ex, "Lỗi khi Seeding dữ liệu mẫu. Hãy đảm bảo đã chạy: dotnet ef database update");
     }
 }
 
