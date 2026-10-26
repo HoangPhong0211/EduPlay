@@ -1,5 +1,4 @@
-
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using BE.Models; // Thay BE bằng namespace thực tế của bạn nếu khác
 
 namespace BE.Data
@@ -55,7 +54,32 @@ namespace BE.Data
                 .HasForeignKey(s => s.ParentId)
                 .OnDelete(DeleteBehavior.Restrict); // Ngăn xóa Phụ huynh nếu còn Học sinh để tránh lỗi dữ liệu
 
-            // 4. Cấu hình quan hệ N-N: Học sinh - Huy hiệu (Bảng trung gian StudentBadge)
+            // 4. Cấu hình quan hệ 1-N: Assignment thuộc về Parent, Student và Lesson
+            modelBuilder.Entity<Assignment>()
+                .HasOne<Parent>()
+                .WithMany()
+                .HasForeignKey(a => a.ParentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Assignment>()
+                .HasOne<Student>()
+                .WithMany()
+                .HasForeignKey(a => a.StudentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Assignment>()
+                .HasOne<Lesson>()
+                .WithMany()
+                .HasForeignKey(a => a.LessonId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Question>()
+                .HasOne<Lesson>()
+                .WithMany()
+                .HasForeignKey(q => q.LessonId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // 5. Cấu hình quan hệ N-N: Học sinh - Huy hiệu (Bảng trung gian StudentBadge)
             modelBuilder.Entity<StudentBadge>()
                 .HasKey(sb => new { sb.StudentId, sb.BadgeId }); // Khóa chính kết hợp 2 cột
 
