@@ -6,61 +6,39 @@ Hệ thống học toán tương tác cho học sinh tiểu học lớp 1–5, h
 
 ## Yêu Cầu Cài Đặt
 
-| Công cụ | Phiên bản tối thiểu |
-|---|---|
-| [.NET SDK](https://dotnet.microsoft.com/download) | 10.0 |
-| [Node.js](https://nodejs.org) | 18+ |
-| [SQL Server LocalDB](https://learn.microsoft.com/en-us/sql/database-engine/configure-windows/sql-server-express-localdb) | Đi kèm Visual Studio hoặc SQL Server Express |
-| EF Core CLI | `dotnet tool install --global dotnet-ef` |
+| Công cụ | Phiên bản tối thiểu | Ghi chú |
+|---|---|---|
+| [.NET SDK](https://dotnet.microsoft.com/download) | 10.0 | Có sẵn khi cài .NET SDK |
+| [Node.js](https://nodejs.org) | 18+ | Dùng để chạy Frontend (React + Vite) |
+| [SQL Server LocalDB](https://learn.microsoft.com/en-us/sql/database-engine/configure-windows/sql-server-express-localdb) | 2019/2022 | Đi kèm Visual Studio (Workload ASP.NET / .NET Desktop) |
 
 ---
 
-## Hướng Dẫn Chạy (sau khi `git clone`)
+## Hướng Dẫn Chạy Nhanh (Dành cho Giáo viên / Đánh giá dự án)
 
-### Bước 1 — Chuẩn bị cấu hình backend (bí mật)
+Hệ thống đã được thiết kế để **tự động tạo Database, chạy Migrations và nạp sẵn dữ liệu mẫu** ngay khi khởi động backend. Không cần cài đặt công cụ hay cấu hình thủ công phức tạp!
 
-Tạo file `BE/appsettings.Development.json` từ template (file này **không được commit** vì chứa API key):
+### Bước 1 — Chạy Backend (.NET Core)
 
-```bash
-copy BE\appsettings.Development.json.example BE\appsettings.Development.json
-```
-
-Sau đó mở `BE/appsettings.Development.json` và điền:
-- **`ApiKey`**: Gemini API Key của bạn (lấy tại [Google AI Studio](https://aistudio.google.com/))
-- **`SenderEmail` / `SenderPassword`**: Gmail + App Password (nếu dùng chức năng gửi OTP)
-
-> Nếu chưa cần tính năng AI và Email, bạn vẫn có thể bỏ qua và chạy được hệ thống — chỉ hai chức năng đó sẽ lỗi.
-
----
-
-### Bước 2 — Khởi động LocalDB
-
-```powershell
-sqllocaldb start MSSQLLocalDB
-```
-
-> Nếu báo "not found": cài SQL Server Express LocalDB hoặc Visual Studio với workload ASP.NET.
-
----
-
-### Bước 3 — Cài đặt và chạy Backend
+Mở Terminal tại thư mục dự án:
 
 ```powershell
 cd BE
-dotnet restore
-dotnet ef database update
 dotnet run
 ```
 
-Backend chạy tại: **http://localhost:5271**  
-Swagger UI: **http://localhost:5271/swagger**
+> **Ghi chú tự động**:
+> - Backend sẽ tự động kết nối `(localdb)\MSSQLLocalDB`, tạo database `EduPlayDB`, chạy toàn bộ migrations và khởi tạo sẵn tài khoản mẫu, bài học, câu hỏi.
+> - Backend lắng nghe tại: **http://localhost:5271**
+> - Swagger UI (API Docs): **http://localhost:5271/swagger**
 
-> `dotnet ef database update` tạo database `EduPlayDB` và áp dụng toàn bộ migrations.  
-> `dotnet run` sẽ tự seed dữ liệu mẫu lần đầu tiên.
+*(Tùy chọn: Bạn cũng có thể mở solution trong Visual Studio và nhấn **F5** để chạy).*
 
 ---
 
-### Bước 4 — Cài đặt và chạy Frontend
+### Bước 2 — Chạy Frontend (React + Vite)
+
+Mở một Terminal mới (khác với terminal backend):
 
 ```powershell
 cd FE
@@ -68,18 +46,36 @@ npm install
 npm run dev
 ```
 
-Frontend chạy tại: **http://localhost:5173**
+> Frontend chạy tại: **http://localhost:5173**
 
 ---
 
-## Tài Khoản Mẫu (sau khi seed)
+## Tài Khoản Mẫu Đăng Nhập
 
-| Vai trò | Username | Password |
-|---|---|---|
-| Admin | `admin` | `Password123@` |
-| Phụ huynh | `parent1` | `Password123@` |
-| Học sinh 1 | `student1` | `Password123@` |
-| Học sinh 2 | `student2` | `Password123@` |
+Hệ thống đã có sẵn các tài khoản mẫu sau (tất cả đều dùng chung mật khẩu: `Password123@`):
+
+| Vai trò | Tên đăng nhập (Username) | Mật khẩu | Chức năng chính |
+|---|---|---|---|
+| **Quản trị viên (Admin)** | `admin` | `Password123@` | Quản lý khối lớp, bài học, ngân hàng câu hỏi, tạo đề thi, quản lý người dùng |
+| **Phụ huynh (Parent)** | `parent1` | `Password123@` | Giao bài cho con, cài giới hạn thời gian học, xem báo cáo & phân tích điểm |
+| **Học sinh 1** | `student1` | `Password123@` | Làm bài tập, luyện trắc nghiệm/điền số, nhận huy hiệu (Bé Bo - 120 điểm) |
+| **Học sinh 2** | `student2` | `Password123@` | Làm bài tập được phụ huynh giao (Bé Bông - 40 điểm) |
+
+---
+
+## (Tùy Chọn) Cấu Hình Tính Năng Mở Rộng: AI & Gửi Email OTP
+
+> ⚠️ **Lưu ý**: Nếu chỉ chấm bài và trải nghiệm toàn bộ các tính năng cốt lõi (Đăng nhập, Quản lý đề, Học tập, Làm bài, Báo cáo, Gamification), bạn **HOÀN TOÀN KHÔNG CẦN** làm bước này.
+
+Chỉ thực hiện bước này nếu muốn thử nghiệm tính năng **Sinh gợi ý tự động bằng Gemini AI** hoặc **Gửi mã OTP quên mật khẩu qua Gmail**:
+
+1. Tạo file `BE/appsettings.Development.json` từ file mẫu:
+   ```powershell
+   copy BE\appsettings.Development.json.example BE\appsettings.Development.json
+   ```
+2. Điền API Key và thông tin Gmail:
+   - `ApiKey`: Gemini API Key (tạo miễn phí tại [Google AI Studio](https://aistudio.google.com/)).
+   - `SenderEmail` & `SenderPassword`: Gmail và Mật khẩu ứng dụng (App Password) của Gmail.
 
 ---
 
@@ -87,26 +83,19 @@ Frontend chạy tại: **http://localhost:5173**
 
 ```
 EduPlay/
-├── BE/                          # ASP.NET Core 10 Backend
-│   ├── Controllers/             # API endpoints
-│   ├── Services/                # Business logic
-│   ├── Data/                    # DbContext + DbSeeder
-│   ├── Models/                  # Entity models
-│   ├── Migrations/              # EF Core migrations (7 migrations)
-│   ├── appsettings.json         # Cấu hình chung (committed)
-│   └── appsettings.Development.json.example  # Template cấu hình bí mật
+├── BE/                          # ASP.NET Core Backend
+│   ├── Controllers/             # API Endpoints (Auth, Admin, Parent, Student, Report...)
+│   ├── Services/                # Nghiệp vụ xử lý logic
+│   ├── Data/                    # DbContext + DbSeeder (Dữ liệu mẫu chuẩn)
+│   ├── Models/                  # Thực thể CSDL (User, Parent, Student, Lesson, Question...)
+│   ├── Migrations/              # 8 bản EF Core Migrations
+│   ├── appsettings.json         # Cấu hình chuỗi kết nối và JWT
+│   └── appsettings.Development.json.example  # Template cấu hình bí mật (tùy chọn)
 └── FE/                          # React + Vite Frontend
     ├── src/
-    │   ├── admin/               # Giao diện Admin
-    │   ├── parent/              # Giao diện Phụ huynh
-    │   └── student/             # Giao diện Học sinh
-    └── .env                     # VITE_API_URL (mặc định: http://localhost:5271/api)
+    │   ├── admin/               # Quản lý khóa học, câu hỏi, tạo đề, user
+    │   ├── parent/              # Bảng điều khiển phụ huynh, giao bài, báo cáo
+    │   ├── student/             # Bảng học sinh, làm bài tập, bộ sưu tập huy hiệu
+    │   └── auth/                # Đăng nhập, đăng ký, quên mật khẩu
+    └── .env                     # VITE_API_URL=http://localhost:5271/api
 ```
-
----
-
-## Lưu Ý
-
-- `BE/appsettings.Development.json` bị gitignore — **không bao giờ commit file này**.
-- Nếu đổi port backend, cập nhật `FE/.env` → `VITE_API_URL=http://localhost:<port>/api`.
-- Để xem log migration lỗi chi tiết: `dotnet ef database update --verbose`.
